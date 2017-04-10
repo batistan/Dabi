@@ -363,7 +363,6 @@ INSERT INTO stops_at values (001,8,'05:15:00','05:17:00');
 
 -- south bound trains MF
 
-
 --all stops of train 9 
 INSERT INTO stops_at values (001,9,'04:00:00','04:02:00');
 INSERT INTO stops_at values (002,9,'04:15:00','04:17:00');
@@ -398,6 +397,7 @@ INSERT INTO stops_at values (030,9,'11:15:00','11:17:00');
 INSERT INTO stops_at values (031,9,'11:30:00','11:32:00');
 INSERT INTO stops_at values (032,9,'11:45:00','11:47:00');
 INSERT INTO stops_at values (033,9,'12:00:00','12:02:00');
+INSERT INTO stops_at values (034,9,'12:15:00','12:17:00');
 
 --all stops of train 10 
 INSERT INTO stops_at values (001,10,'07:00:00','07:02:00');
@@ -433,6 +433,7 @@ INSERT INTO stops_at values (030,10,'14:15:00','14:17:00');
 INSERT INTO stops_at values (031,10,'14:30:00','14:32:00');
 INSERT INTO stops_at values (032,10,'14:45:00','14:47:00');
 INSERT INTO stops_at values (033,10,'15:00:00','15:02:00');
+INSERT INTO stops_at values (034,10,'15:15:00','15:17:00');
 
 --all stops of train 11 
 INSERT INTO stops_at values (001,11,'10:00:00','10:02:00');
@@ -468,6 +469,7 @@ INSERT INTO stops_at values (030,11,'17:15:00','17:17:00');
 INSERT INTO stops_at values (031,11,'17:30:00','17:32:00');
 INSERT INTO stops_at values (032,11,'17:45:00','17:47:00');
 INSERT INTO stops_at values (033,11,'18:00:00','18:02:00');
+INSERT INTO stops_at values (034,11,'18:15:00','18:17:00');
 
 --all stops of train 12 
 INSERT INTO stops_at values (001,12,'13:00:00','13:02:00');
@@ -503,6 +505,7 @@ INSERT INTO stops_at values (030,12,'20:15:00','20:17:00');
 INSERT INTO stops_at values (031,12,'20:30:00','20:32:00');
 INSERT INTO stops_at values (032,12,'20:45:00','20:47:00');
 INSERT INTO stops_at values (033,12,'21:00:00','21:02:00');
+INSERT INTO stops_at values (034,12,'21:15:00','21:17:00');
 
 --all stops of train 13 
 INSERT INTO stops_at values (001,13,'15:00:00','15:02:00');
@@ -538,6 +541,7 @@ INSERT INTO stops_at values (030,13,'22:15:00','22:17:00');
 INSERT INTO stops_at values (031,13,'22:30:00','22:32:00');
 INSERT INTO stops_at values (032,13,'22:45:00','22:47:00');
 INSERT INTO stops_at values (033,13,'23:00:00','23:02:00');
+INSERT INTO stops_at values (034,13,'23:15:00','23:17:00');
 
 --all stops of train 14 
 INSERT INTO stops_at values (001,14,'17:00:00','17:02:00');
@@ -573,6 +577,7 @@ INSERT INTO stops_at values (030,14,'00:15:00','00:17:00');
 INSERT INTO stops_at values (031,14,'00:30:00','00:32:00');
 INSERT INTO stops_at values (032,14,'00:45:00','00:47:00');
 INSERT INTO stops_at values (033,14,'01:00:00','01:02:00');
+INSERT INTO stops_at values (034,14,'01:15:00','01:17:00');
 
 --all stops of train 15 
 INSERT INTO stops_at values (001,15,'19:00:00','19:02:00');
@@ -608,6 +613,7 @@ INSERT INTO stops_at values (030,15,'02:15:00','02:17:00');
 INSERT INTO stops_at values (031,15,'02:30:00','02:32:00');
 INSERT INTO stops_at values (032,15,'02:45:00','02:47:00');
 INSERT INTO stops_at values (033,15,'03:00:00','03:02:00');
+INSERT INTO stops_at values (034,15,'03:15:00','03:17:00');
 
 --all stops of train 16 
 INSERT INTO stops_at values (001,16,'21:00:00','21:02:00');
@@ -643,7 +649,7 @@ INSERT INTO stops_at values (030,16,'04:15:00','04:17:00');
 INSERT INTO stops_at values (031,16,'04:30:00','04:32:00');
 INSERT INTO stops_at values (032,16,'04:45:00','04:47:00');
 INSERT INTO stops_at values (033,16,'05:00:00','05:02:00');
-
+INSERT INTO stops_at values (034,16,'05:15:00','05:17:00');
 
 -- north bound trains SSH
 
