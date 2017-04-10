@@ -14,16 +14,16 @@ CREATE TABLE IF NOT EXISTS Segments (
 
 INSERT INTO Stations VALUES (001, 'Boston South Station, MA', 'BOST');
 INSERT INTO Stations VALUES (002, 'Boston Back Bay, MA', 'BBAY');
-INSERT INTO Stations VALUES (003, 'Route 128, MA', 'RTMS');
+INSERT INTO Stations VALUES (003, 'Route 128, MA', 'RTMA');
 INSERT INTO Stations VALUES (004, 'Providence, RI', 'PRVD');
 INSERT INTO Stations VALUES (006, 'Kingston, RI', 'KING');
 INSERT INTO Stations VALUES (007, 'Westerly, RI', 'WSLY');
 INSERT INTO Stations VALUES (008, 'Mystic, CT', 'MYST');
 INSERT INTO Stations VALUES (009, 'New London, CT', 'NLND');
 INSERT INTO Stations VALUES (010, 'Old Saybrook, CT', 'OSYB');
-INSERT INTO Stations VALUES (011, 'Springfiel, CT', 'SPRG');
+INSERT INTO Stations VALUES (011, 'Springfield, CT', 'SPRG');
 INSERT INTO Stations VALUES (012, 'Windsor Locks, CT', 'WNLK');
-INSERT INTO Stations VALUES (013, 'Windso, CT', 'WNSR');
+INSERT INTO Stations VALUES (013, 'Windsor, CT', 'WNSR');
 INSERT INTO Stations VALUES (014, 'Hartford, CT', 'HRTD');
 INSERT INTO Stations VALUES (015, 'Berlin, CT', 'BRLN');
 INSERT INTO Stations VALUES (016, 'Meriden, CT', 'MRDN');
