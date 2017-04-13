@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="page">
+  <div class="panel">
+    <div class="title">
+		<h1>Login</h1>
+		{% if username %}
+			<br><p><strong>You are already logged in as:</strong> {{ username }}</p>
+            <p><strong>Click here to log out: <a href="/signedout">Log out</a></strong></p>
+		{% else %}
+          <div class="contact-form mar-top30">
+			<form method="post" action="{{ url_for('loggedin') }}">
+                <label> <span>Username</span>
+                    <input type="text" class="input_text" name="username"/>
+                </label>
+
+                <label> <span>Password</span>
+                    <input type="password" class="input_text" name="password"/>
+                </label>
+
+                <label>
+                    <button type="submit" class="button">Submit</button>
+                </label>
+			</form>
+          </div>
+        {% endif %}
+	
+	
+</div>
+</div>
+</div>
+
+{% endblock %}
