@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Learnr</title>
+<title>Namtrak</title>
 <link href="../static/css/styles.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Rokkitt' rel='stylesheet' type='text/css'>
@@ -20,16 +20,20 @@
 <header>		
   <div class="header-wrap">
   <div class="logo">
-    <h1>Learnr</h1>
+    <h1>Namtrak</h1>
   </div>
   <div class="menu">
     <ul class="sf-menu" id="example">
       <li><a href="index">Home</a></li>
-      <li><a href="meetup">Create Meetup</a></li>
+      <!--<li><a href="meetup">Create Meetup</a></li>
       <li> <a href="listmeetups">List Meetups </a> </li>
-      <li> <a href="search">Search for a Meetup</a></li>
-	  <li><a href="signup">Sign Up</a></li>
-	  <li><a href="login">Login</a></li>
+      <li> <a href="search">Search for a Meetup</a></li>-->
+      <li> <a href="listreservations">My Reservations</a></li>
+      <li> <a href="schedule">Train Schedule</a></li>
+      {%if not username%}
+      <li><a href="login">Login</a></li>
+      <li><a href="signup">Don't have an account? Sign up!</a></li>
+      {%endif%}
     </ul>
   </div>
 </div>

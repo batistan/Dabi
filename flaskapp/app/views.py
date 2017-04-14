@@ -1,5 +1,5 @@
 from app import app
-import json
+#import json
 from flask import render_template, redirect, request, flash, g, session, url_for, send_file
 from models import *
 
@@ -17,6 +17,11 @@ def index():
         return render_template("index.html",username =session['username'])
     else:
         return render_template("index.html")
+
+@app.route('/search_results', methods=["GET", "POST"])
+def search_results():
+    #TODO: Get submitted data
+    return render_template("search_results.html")
 
 # keep these since we might want to use css/images/js in our stuff
 @app.route("/css/<css>")

@@ -149,3 +149,45 @@ def confirmUserPass(user,passw):
         # def exists_user():
         # def delete_meetup():
         # def delete_user():
+
+def check_free_seats(start_station, end_station, train_num, date):
+    #start_station; end_station; train_num; date #from user
+    next_station = start_station+1
+    while (next_station<=end_station):
+        #find segment id with north-end = start_station and south_end = next_station
+        #use seg_id, date and train_num to find free seats
+        ## the two actions above should be a SQL stored procedure executed in one line in python
+        ### stored procedure returns boolean for free or not free.
+        # nope.
+        with sql.connect("database.db") as con:
+            cur = con.cursor()
+            # find the one segment with matching north and south stations
+            # query the number of seats it has free for x train on y date
+            # TODO: make this less clunky as sin
+            cur.execute("SELECT sf_seats_free FROM Seats_Free WHERE sf_train_num=? AND sf_date=? AND sf_seg_id in (SELECT segment_id FROM Segments WHERE (segment_north=? AND segment_south=?) OR (segment_south=? AND segment_north=?))", (train_num, sqldate(date), start_station, end_station, start_station, end_station))
+        ## store in local var free_seats
+            free_seats = cur.fetchone()
+            
+            if(not free_seats): 
+                return false 
+        start_station=next_station
+        next_station+=1
+    return true
+
+# we might need these later. i'm shoving them here just in case
+# we can sort out the details as we go along
+from datetime import datetime
+
+def sqldate(date):
+    # takes python datetime object and converts to string for submission to sql queries
+    # TODO: remake schema.sql to use datetime where appropriate
+    # TODO: create format string e.g. formatstring = '%b %d %Y %I:%M%p'
+    # look up strptime in datetime documentation to see what i mean
+    
+    formatstring = "%Y-%m-%d %H:%M:%S"
+    dt = date.strftime(formatstring)
+    return dt
+
+def pydate(date):
+    # takes string and converts to datetime object for use in python functions
+    return datetime.strptime(date, formatstring)
