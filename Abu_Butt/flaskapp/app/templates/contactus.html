@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<link href="../static/css/styles.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Rokkitt' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../static/css/superfish.css" media="screen">
+    <script type="text/javascript"
+     src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js">
+    </script>
+    <script type="text/javascript"
+     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js">
+    </script>
+    <script type="text/javascript"
+     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.pt-BR.js">
+    </script>
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen"
+     href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
+	 
+<div class="page">
+	<div class="panel">
+		<div class = "title">
+		
+		<h1>Contact Us</h1>
+        <h3>All fields are required</h3>
+          		  	
+        <form method="post" action="{{url_for('messagesent')}}" id="contactForm">
+			<p id="returnmessage"></p>
+			<label>Name: <span>*</span></label>
+			<input type="text" class="input_text" id="name" placeholder="Name"/>
+			<label>Email: <span>*</span></label>
+			<input type="text" class="input_text" id="email" placeholder="Email"/>
+			<label>Message:</label>
+			<textarea id="message" class="input_text" class="contactMessage" onkeyup="characterCount()" placeholder="Message......."></textarea>
+			<button class="button">Submit</button>
+			</form>
+
+          </div>
+
+		{% if error %} 
+		<p class=error><strong>Error:</strong> {{ error }}
+		{% endif %}  
+		</div>
+	</div>
+</div>
+
+
+<link href="../static/css/styles.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Rokkitt' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../static/css/superfish.css" media="screen">
+
+{% endblock %}

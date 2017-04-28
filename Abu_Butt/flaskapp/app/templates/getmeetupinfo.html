@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page">
+	<div class="panel">
+		<div class="title">
+			<h1>Get info for a meetup!</h1>
+			{% if error %} 
+			<p class=error><strong>Error:</strong> {{ error }}
+			{% endif %}  
+			
+			<div class="contact-form mar-top30">
+				<label> <span>Event ID:</span>
+				  <input type = "text" name ="a"/>
+				</label>
+				
+				<h3 name = "a"></h3>
+				  <button class="button" onclick="displayInfo()">Load</button>
+				  
+
+          </div>
+
+    <script>
+
+     function displayInfo() {  $.getJSON("http://localhost:5000/_minfo", {
+      a: $('input[name="a"]').val()
+       }, function(data) {
+        $('h3[name="a"]').text("")
+        for (var key in data){
+          $('h3[name="a"]').append("<br>" + key + ": " + data[key]);
+        }
+      });
+      return false;}
+  </script>
+  
+		</div>
+	</div>
+</div>
+{% endblock %}
