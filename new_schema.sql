@@ -1135,6 +1135,89 @@ CREATE TABLE IF NOT EXISTS Tickets(
   	FOREIGN KEY (return_train) REFERENCES Trains(train_id)
 );
 
+-- TRIGGERS FOR THE `Tickets` TABLE
+
+/*This trigger is fired when a NEW ONE_WAY ticket is added to the database.
+It decrements the number of free seats on segments that will be traversed by ticket holder*/
+CREATE TRIGGER IF NOT EXISTS decrement_free_seats_one_way
+  AFTER INSERT ON Tickets
+  FOR EACH ROW
+  WHEN new.round_trip=0
+BEGIN
+  UPDATE Seats_Free
+  SET sf_seats_free = sf_seats_free - 1
+  WHERE sf_seg_id IN (SELECT segment_id
+                      FROM Segments WHERE (segment_north >= new.trip_starts AND segment_north < new.trip_ends)
+                                          OR (segment_north < new.trip_starts AND segment_north >= new.trip_ends))
+        AND (sf_train_num=new.trip_train)
+        AND (sf_date=new.trip_date);
+END;
+
+/*This trigger is fired when a NEW ROUND-TRIP ticket is added to the database .
+It decrements the number of free seats on segments that will be traversed by ticket holder*/
+CREATE TRIGGER IF NOT EXISTS decrement_free_seats_round_trip
+  AFTER INSERT ON Tickets
+  FOR EACH ROW
+  WHEN new.round_trip=1
+BEGIN
+  UPDATE Seats_Free
+  SET sf_seats_free = sf_seats_free - 1
+  WHERE sf_seg_id IN (SELECT segment_id
+                      FROM Segments WHERE (segment_north >= new.trip_starts AND segment_north < new.trip_ends)
+                                          OR (segment_north < new.trip_starts AND segment_north >= new.trip_ends))
+        AND (sf_train_num=new.trip_train)
+        AND (sf_date=new.trip_date);
+
+  UPDATE Seats_Free
+  SET sf_seats_free = sf_seats_free - 1
+  WHERE sf_seg_id IN (SELECT segment_id
+                      FROM Segments WHERE (segment_north >= new.trip_starts AND segment_north < new.trip_ends)
+                                          OR (segment_north < new.trip_starts AND segment_north >= new.trip_ends))
+        AND (sf_train_num=new.return_train)
+        AND (sf_date=new.return_date);
+END;
+
+/*This trigger is fired when a ONE-WAY ticket in the `Tickets` table is cancelled.
+It increments the number of free seats on segments that would have been traversed by ticket holder*/
+CREATE TRIGGER IF NOT EXISTS increment_free_seats_one_way
+  AFTER UPDATE ON Tickets
+  FOR EACH ROW
+  WHEN new.round_trip=0 AND new.cancelled=1
+BEGIN
+  UPDATE Seats_Free
+  SET sf_seats_free = sf_seats_free + 1
+  WHERE sf_seg_id IN (SELECT segment_id
+                      FROM Segments WHERE (segment_north >= new.trip_starts AND segment_north < new.trip_ends)
+                                          OR (segment_north < new.trip_starts AND segment_north >= new.trip_ends))
+        AND (sf_train_num=new.trip_train)
+        AND (sf_date=new.trip_date);
+END;
+
+/*This trigger is fired when a ROUND-TRIP ticket in the `Tickets` table is cancelled.
+It increments the number of free seats on segments that would have been traversed by ticket holder*/
+CREATE TRIGGER IF NOT EXISTS increment_free_seats_round_trip
+  AFTER UPDATE ON Tickets
+  FOR EACH ROW
+  WHEN new.round_trip=1 AND new.cancelled=1
+BEGIN
+  UPDATE Seats_Free
+  SET sf_seats_free = sf_seats_free + 1
+  WHERE sf_seg_id IN (SELECT segment_id
+                      FROM Segments WHERE (segment_north >= new.trip_starts AND segment_north < new.trip_ends)
+                                          OR (segment_north < new.trip_starts AND segment_north >= new.trip_ends))
+        AND (sf_train_num=new.trip_train)
+        AND (sf_date=new.trip_date);
+
+  UPDATE Seats_Free
+  SET sf_seats_free = sf_seats_free + 1
+  WHERE sf_seg_id IN (SELECT segment_id
+                      FROM Segments WHERE (segment_north >= new.trip_starts AND segment_north < new.trip_ends)
+                                          OR (segment_north < new.trip_starts AND segment_north >= new.trip_ends))
+        AND (sf_train_num=new.return_train)
+        AND (sf_date=new.return_date);
+END;
+
+
 
 INSERT INTO passengers(passenger_lname, passenger_fname, passenger_billing_address, passenger_email) 
 VALUES ('Butt', 'Abu','160 Convent Ave, New York, NY 11103','buttabu@yahoo.com');
