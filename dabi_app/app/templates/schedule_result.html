@@ -6,8 +6,8 @@
 <br/>
 
 
-<h2 style="padding:0 10px 0 10px; text-align:center;"> Trains available on {{ trip_date}} in the {{trip_time_of_day}} </h2>
-<h3> Travelling from {{start_station}} to {{end_station}} </h3>
+<h2 style="padding:0 10px 0 10px; text-align:center;"> Schedule of trains on {{ trip_date}} in the {{trip_time_of_day}} </h2>
+<h3> Running from {{start_station}} to {{end_station}} </h3>
 <table>
 	<tr>
 			<th style="padding:0 15px 0 15px;">Train Number</th>
@@ -16,9 +16,7 @@
 
 </table>
 
-
 {% for t in all_trains %}
-	<a href="{{ url_for('booktrip', train_num=t['train_num'], train_time=t['time_out'])}}">
 	<table >
 		<tr >
 			<td style="padding:0 50px 0 50px;">{{t['train_num']}}</td>
