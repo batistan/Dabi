@@ -57,6 +57,19 @@ def update_free_seats(start_station,end_station,train_num,date):
         next_station+=1
 
 
+def get_all_stations():
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT station_name,station_code from Stations;")
+        s_list = list(cur.fetchall())
+        all_stations = []
+        for s in s_list:
+            station={}
+            station["station_name"] = s[0]
+            station["station_code"] = s[1]
+            all_stations.append(station)
+        return all_stations
+
 
 '''
     method for getting station id from station symbol
@@ -65,7 +78,7 @@ def get_station_id(stationcode):
     with sql.connect("database.db") as con:
         cur = con.cursor()
         # need the comma here or python doesn't recognize (stationcode) as a tuple
-        cur.execute("SELECT station_id from Stations WHERE station_code =?", (stationcode,))
+        cur.execute("SELECT station_id from Stations WHERE station_code =?;", (stationcode,))
         return cur.fetchall()[0][0]
 
 

@@ -92,78 +92,18 @@
             <select name="startstation" required>
               <!-- line below isn't the cause of the error-->
               <option value="default" selected="selected">Select station...</option>
-              <option value="BOST">Boston South Station, MA</option>
-              <option value="BBAY">Boston Back Bay, MA</option>
-              <option value="RTMA">Route 128, MA</option>
-              <option value="PRVD">Providence, RI</option>
-              <option value="KING">Kingston, RI</option>
-              <option value="WSLY">Westerly, RI</option>
-              <option value="MYST">Mystic, CT</option>
-              <option value="NLND">New London, CT</option>
-              <option value="OSYB">Old Saybrook, CT</option>
-              <option value="SPRG">Springfield, CT</option>
-              <option value="WNLK">Windsor Locks, CT</option>
-              <option value="WNSR">Windsor, CT</option>
-              <option value="HRTD">Hartford, CT</option>
-              <option value="BRLN">Berlin, CT</option>
-              <option value="MRDN">Meriden, CT</option>
-              <option value="WLFD">Wallingford, CT</option>
-              <option value="NHVN">New Haven, CT</option>
-              <option value="BDPR">Bridgeport, CT</option>
-              <option value="STML">Stamford, CT</option>
-              <option value="NRCH">New Rochelle, NY</option>
-              <option value="NYPS">New York Penn Station, NY</option>
-              <option value="NJPS">Newark Penn Station, NJ</option>
-              <option value="LIBR">Newark Liberty Airport, NJ</option>
-              <option value="MTRP">Metropark, NJ</option>
-              <option value="TRNT">Trenton, NJ</option>
-              <option value="PHLY">30th Street Station, PA</option>
-              <option value="WGTN">Wilmington, DE</option>
-              <option value="NRDE">Newark, DE</option>
-              <option value="ABRD">Aberdeen, MD</option>
-              <option value="MDPS">Baltimore Penn Station, MD</option>
-              <option value="BWIM">BWI Marshall Airport</option>
-              <option value="NCRL">New Carrollton, MD</option>
-              <option value="USDC">Union Station, DC</option>
+              {% for station in all_stations %}
+                <option value= "{{station['station_code']}}"> {{station['station_name']}}</option>
+              {% endfor %}
             </select>
           </label>
           <label> <span>To Station:</span>
             <select name="endstation" required>
               <!-- line below isn't the cause of the error-->
               <option value="default" selected="selected">Select station...</option>
-              <option value="BOST">Boston South Station, MA</option>
-              <option value="BBAY">Boston Back Bay, MA</option>
-              <option value="RTMA">Route 128, MA</option>
-              <option value="PRVD">Providence, RI</option>
-              <option value="KING">Kingston, RI</option>
-              <option value="WSLY">Westerly, RI</option>
-              <option value="MYST">Mystic, CT</option>
-              <option value="NLND">New London, CT</option>
-              <option value="OSYB">Old Saybrook, CT</option>
-              <option value="SPRG">Springfield, CT</option>
-              <option value="WNLK">Windsor Locks, CT</option>
-              <option value="WNSR">Windsor, CT</option>
-              <option value="HRTD">Hartford, CT</option>
-              <option value="BRLN">Berlin, CT</option>
-              <option value="MRDN">Meriden, CT</option>
-              <option value="WLFD">Wallingford, CT</option>
-              <option value="NHVN">New Haven, CT</option>
-              <option value="BDPR">Bridgeport, CT</option>
-              <option value="STML">Stamford, CT</option>
-              <option value="NRCH">New Rochelle, NY</option>
-              <option value="NYPS">New York Penn Station, NY</option>
-              <option value="NJPS">Newark Penn Station, NJ</option>
-              <option value="LIBR">Newark Liberty Airport, NJ</option>
-              <option value="MTRP">Metropark, NJ</option>
-              <option value="TRNT">Trenton, NJ</option>
-              <option value="PHLY">30th Street Station, PA</option>
-              <option value="WGTN">Wilmington, DE</option>
-              <option value="NRDE">Newark, DE</option>
-              <option value="ABRD">Aberdeen, MD</option>
-              <option value="MDPS">Baltimore Penn Station, MD</option>
-              <option value="BWIM">BWI Marshall Airport</option>
-              <option value="NCRL">New Carrollton, MD</option>
-              <option value="USDC">Union Station, DC</option>
+              {% for station in reverse_stations %}
+                <option value= "{{station['station_code']}}"> {{station['station_name']}}</option>
+              {% endfor %}
             </select>
           </label>
           <label> <span>Type of trip:</span>
@@ -171,31 +111,6 @@
             <input type="radio" onclick="javascript:yesnoCheck();" id="roundradio" name="roundtrip" value="round">Round Trip<br>
           </label>
 
-          <!-- TODO: find a way to do (haha) this that doesn't wipe the datetimepicker css -->
-          <!-- <div id="roundtrip" style="display:none">
-            <label> <span>Return time of day:</span>
-              <select name="returntime" required>
-                <option value="morning">Morning</option>
-                <option value="afternoon">Afternoon</option>
-                <option value="evening">Evening</option>
-              </select>
-            </label>
-
-
-            <label><span>Return Date:</span>
-            <div id="datetimepicker1" class="input-append date" >
-              <span class="add-on">
-                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-
-              </span>
-              <input type="text" class ="input_text" name="tripdate"></input>
-
-            </div>
-          </label>
-
-
-
-           </div> -->
            <div id="roundtrip" style="display:none">
             <label> <span>Return time of day:</span>
               <select name="returntime" required>

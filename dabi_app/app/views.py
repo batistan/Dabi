@@ -12,16 +12,17 @@ app.secret_key = "donttellanyonemysecret"
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 
-# left the username/password code in just in case
+
 def index():
-    if 'username' in session:
-        return render_template("index.html",username =session['username'])
-    else:
-        return render_template("index.html")
+    all_stations = get_all_stations()
+    reverse_stations = reversed(all_stations)
+    return render_template("index.html", all_stations=all_stations, reverse_stations=reverse_stations)
 
 @app.route('/check_schedule',methods=["GET","POST"])
 def check_schedule():
-    return render_template("check_schedule.html")
+    all_stations = get_all_stations()
+    reverse_stations = reversed(all_stations)
+    return render_template("check_schedule.html", all_stations=all_stations, reverse_stations=reverse_stations)
 
 @app.route('/schedule_result', methods=["GET","POST"])
 def schedule_result():
