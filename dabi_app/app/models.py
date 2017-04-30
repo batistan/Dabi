@@ -57,6 +57,19 @@ def update_free_seats(start_station,end_station,train_num,date):
         next_station+=1
 
 
+def get_all_stations():
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT station_name,station_code from Stations;")
+        s_list = list(cur.fetchall())
+        all_stations = []
+        for s in s_list:
+            station={}
+            station["station_name"] = s[0]
+            station["station_code"] = s[1]
+            all_stations.append(station)
+        return all_stations
+
 
 '''
     method for getting station id from station symbol
@@ -65,7 +78,7 @@ def get_station_id(stationcode):
     with sql.connect("database.db") as con:
         cur = con.cursor()
         # need the comma here or python doesn't recognize (stationcode) as a tuple
-        cur.execute("SELECT station_id from Stations WHERE station_code =?", (stationcode,))
+        cur.execute("SELECT station_id from Stations WHERE station_code =?;", (stationcode,))
         return cur.fetchall()[0][0]
 
 
@@ -211,3 +224,18 @@ def get_ticket_record(ticketID):
         query_stmt = ("SELECT * FROM Tickets WHERE trip_id = ?")
         cur.execute(query_stmt, (ticketID,))
         return cur.fetchone()
+
+def delay_train(trainID, amt, station):
+    with sql.connect('database.db') as con:
+        cur = con.cursor()
+        query_stmt = ("CREATE TABLE Temp_Stops_At AS"
+                      "SELECT * FROM Stops_At")
+        cur.execute(query_stmt)
+
+        query_stmt = ("SELECT station_id FROM Temp_Stops_At where train_num = ? AND station_id >= ? ORDER BY station_id ASC")
+        cur.execute(query_stmt, (trainID, station))
+
+        for st in cur.fetchall():
+            query_stmt = ("UPDATE Temp_Stops_At SET time_in = TIME(time_in, '+? minute'), time_out = TIME(time_out,'+? minute') WHERE train_num = ? AND station_id = ?")
+            cur.execute(query_stmt, (amt, amt, trainID, st))
+

@@ -12,12 +12,32 @@ app.secret_key = "donttellanyonemysecret"
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 
-# left the username/password code in just in case
+
 def index():
-    if 'username' in session:
-        return render_template("index.html",username =session['username'])
-    else:
-        return render_template("index.html")
+    all_stations = get_all_stations()
+    reverse_stations = reversed(all_stations)
+    return render_template("index.html", all_stations=all_stations, reverse_stations=reverse_stations)
+
+@app.route('/check_schedule',methods=["GET","POST"])
+def check_schedule():
+    all_stations = get_all_stations()
+    reverse_stations = reversed(all_stations)
+    return render_template("check_schedule.html", all_stations=all_stations, reverse_stations=reverse_stations)
+
+@app.route('/schedule_result', methods=["GET","POST"])
+def schedule_result():
+    trip_time_of_day = request.form['triptime']
+    trip_date = request.form['tripdate']
+    start_station_code = request.form['startstation']
+    end_station_code = request.form['endstation']
+    start_station = get_station_id(start_station_code)
+    end_station = get_station_id(end_station_code)
+
+    all_trains = get_trains_from_station(start_station,end_station,trip_date,trip_time_of_day)
+
+    return render_template("schedule_result.html",all_trains=all_trains, trip_date=trip_date, trip_time_of_day=trip_time_of_day, start_station = start_station_code, end_station = end_station_code, )
+
+
 
 @app.route('/search_results', methods=["GET", "POST"])
 def search_results():
@@ -66,7 +86,7 @@ def search_results():
             free_trains.append(t)
 
     ##Change to return only free trains
-    return render_template("search_results.html",all_trains=free_trains, trip_date=trip_date, trip_time_of_day=trip_time_of_day, start_station = start_station, end_station = end_station, )
+    return render_template("search_results.html",all_trains=free_trains, trip_date=trip_date, trip_time_of_day=trip_time_of_day, start_station = session['start_station_name'], end_station = session['end_station_name'], )
 
 ## get user (or new user) info and send to confirmation through the form.
 @app.route("/book/<int:train_num>/<train_time>")
