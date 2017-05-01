@@ -57,6 +57,16 @@ def update_free_seats(start_station,end_station,train_num,date):
         next_station+=1
 
 
+'''
+for filing dropdowns etc in templates
+'''
+
+def get_all_trains():
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT train_num from Trains ;")
+        return [ t[0] for t in list(cur.fetchall())]     
+
 def get_all_stations():
     with sql.connect("database.db") as con:
         cur = con.cursor()
@@ -70,6 +80,22 @@ def get_all_stations():
             all_stations.append(station)
         return all_stations
 
+def get_train_seats(train_num,train_date):
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        q=("select sf.sf_seats_free, sg.segment_north,sg.segment_south from Seats_free sf JOIN "
+         "segments sg on sf.sf_seg_id=sg.segment_id AND sf.sf_train_num=? AND "
+            "sf.sf_date=?;")
+        cur.execute(q, (train_num,train_date))
+        t_seats = list(cur.fetchall())
+        train_seats =[]
+        for t in t_seats:
+            s={}
+            s["seats"]=t[0]
+            s["station1"]=t[1]
+            s["station2"]=t[2]
+            train_seats.append(s)
+        return train_seats
 
 '''
     method for getting station id from station symbol

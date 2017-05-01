@@ -24,6 +24,18 @@ def check_schedule():
     reverse_stations = reversed(all_stations)
     return render_template("check_schedule.html", all_stations=all_stations, reverse_stations=reverse_stations)
 
+@app.route('/train_seats')
+def check_seats():
+    trains = get_all_trains()
+    return render_template("check_seats.html", trains=trains)
+
+@app.route("/train_seats", methods = ["POST"])
+def show_seats():
+    train_num = request.form["trainnum"]
+    t_date = request.form["tdate"]
+    seats = get_train_seats(train_num,t_date)
+    return render_template("show_seats.html", seats=seats, train_num=train_num)
+
 @app.route('/schedule_result', methods=["GET","POST"])
 def schedule_result():
     trip_time_of_day = request.form['triptime']
