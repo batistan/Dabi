@@ -101,7 +101,7 @@
             <select name="endstation" required>
               <!-- line below isn't the cause of the error-->
               <option value="default" selected="selected">Select station...</option>
-              {% for station in reverse_stations %}
+              {% for station in all_stations %}
                 <option value= "{{station['station_code']}}"> {{station['station_name']}}</option>
               {% endfor %}
             </select>

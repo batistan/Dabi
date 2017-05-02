@@ -15,14 +15,16 @@ app.secret_key = "donttellanyonemysecret"
 
 def index():
     all_stations = get_all_stations()
-    reverse_stations = reversed(all_stations)
-    return render_template("index.html", all_stations=all_stations, reverse_stations=reverse_stations)
+    return render_template("index.html", all_stations=all_stations)
 
 @app.route('/check_schedule',methods=["GET","POST"])
 def check_schedule():
     all_stations = get_all_stations()
-    reverse_stations = reversed(all_stations)
-    return render_template("check_schedule.html", all_stations=all_stations, reverse_stations=reverse_stations)
+    return render_template("check_schedule.html", all_stations=all_stations)
+
+@app.route('/train_status')
+def train_status():
+    return "Pulling train data..."
 
 @app.route('/train_seats')
 def check_seats():
