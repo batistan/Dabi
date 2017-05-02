@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<H3> All Tickets in Passengers </H3>
+{% for passenger in passengers %}
+<p> {{ passenger }} </p>
+{% endfor %}
+{% endblock %}

@@ -22,6 +22,21 @@ def check_schedule():
     all_stations = get_all_stations()
     return render_template("check_schedule.html", all_stations=all_stations)
 
+@app.route('/check_db')
+def check_db():
+    return render_template("check_db.html")
+
+@app.route('/check_tickets')
+def check_tickets():
+    tickets = get_all_tickets()
+    return render_template("check_tickets.html",tickets=tickets)
+
+
+@app.route('/check_passengers')
+def check_passengers():
+    passengers = get_all_passengers()
+    return render_template("check_passengers.html",passengers=passengers)
+
 @app.route('/train_status')
 def train_status():
     return "Pulling train data..."

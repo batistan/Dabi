@@ -97,6 +97,19 @@ def get_train_seats(train_num,train_date):
             train_seats.append(s)
         return train_seats
 
+
+def get_all_passengers():
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute(" SELECT * from Passengers")
+        return cur.fetchall()
+
+def get_all_tickets():
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute(" SELECT * from Tickets")
+        return cur.fetchall()
+
 '''
     method for getting station id from station symbol
 '''
