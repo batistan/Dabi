@@ -20,8 +20,8 @@ def create_passenger(p_lname,p_fname,p_address,p_email):
         cur.execute("SELECT LAST_INSERT_ID();")
         return cur.fetchall()[0][0]
 
-'''create ticket
-'''
+
+'''create ticket'''
 def create_ticket(start_station,end_station,train_num,trip_date_time,passenger_id, fare, round_trip, return_train, return_date_time):
     with sql.connect("database.db") as con:
         cur = con.cursor()
@@ -58,7 +58,7 @@ def update_free_seats(start_station,end_station,train_num,date):
 
 
 '''
-for filing dropdowns etc in templates
+for filing drop-downs etc in templates
 '''
 
 def get_all_trains():
@@ -146,10 +146,11 @@ def get_trains_from_station(start_station,end_station,date,time_of_day=None):
     day = pydate(date).weekday()
     if(day<5): 
         day = "MF"
-    else: day = "SSH"
+    else:
+        day = "SSH"
     
     with sql.connect("database.db") as con:
-        cur  = con.cursor()
+        cur = con.cursor()
         squery=("select sa.train_num, sa.time_out from stops_at sa "
                 "join trains t "
                 "on (t.train_num=sa.train_num AND t.direction=? AND t.train_days=?) "
@@ -169,6 +170,18 @@ def get_trains_from_station(start_station,end_station,date,time_of_day=None):
 
             trains_list.append(train)
         return trains_list
+
+
+def is_seats_available(start_station, end_station, train_num, date):
+    with sql.connect('database.db') as con:
+        cur = con.cursor()
+        stmt = ("SELECT sf_seats_free FROM Seats_Free WHERE sf_seg_id IN (SELECT segment_id "
+                "FROM Segments WHERE (segment_north >= ? AND segment_north < ?)"
+                "OR (segment_north < ? AND segment_north >= ?))"
+                "AND (sf_train_num=?) AND (sf_date=?)")
+        cur.execute(stmt, (start_station, end_station, start_station, end_station, train_num, date))
+        result = cur.fetchall()
+        return all(i[0] > 0 for i in result)
 
 
 def check_free_seats(start_station, end_station, train_num, date):
@@ -213,6 +226,7 @@ def sqldate(date):
     dt = date.strftime(formatstring)
     return dt
 
+
 def pydate(date):
     formatstring = "%Y-%m-%d"
     # takes string and converts to datetime object for use in python functions
@@ -241,9 +255,9 @@ def get_passenger_reservation(passengerID):
 def rebook_ticket(ticketID):
     with sql.connect('database.db') as con:
         cur = con.cursor()
-        query_stmt = ("INSERT INTO Tickets (trip_starts, trip_ends, trip_train, trip_date, passenger_id, round_trip, return_trip, return_train, return_date, fare)"
-                      "SELECT (trip_starts, trip_ends, trip_train, trip_date, passenger_id, round_trip, return_trip, return_train, return_date, fare)"
-                      "FROM Tickets"
+        query_stmt = ("INSERT INTO Tickets (trip_starts, trip_ends, trip_train, trip_date, passenger_id, round_trip, return_train, return_date, fare) "
+                      "SELECT trip_starts, trip_ends, trip_train, trip_date, passenger_id, round_trip, return_train, return_date, fare "
+                      "FROM Tickets "
                       "WHERE trip_id = ?")
         cur.execute(query_stmt, (ticketID, ))
         con.commit()
@@ -264,6 +278,7 @@ def get_ticket_record(ticketID):
         cur.execute(query_stmt, (ticketID,))
         return cur.fetchone()
 
+
 def delay_train(trainID, amt, station):
     with sql.connect('database.db') as con:
         cur = con.cursor()
@@ -278,3 +293,8 @@ def delay_train(trainID, amt, station):
             query_stmt = ("UPDATE Temp_Stops_At SET time_in = TIME(time_in, '+? minute'), time_out = TIME(time_out,'+? minute') WHERE train_num = ? AND station_id = ?")
             cur.execute(query_stmt, (amt, amt, trainID, st))
 
+
+def pydate(date):
+    formatstring = "%Y-%m-%d"
+    # takes string and converts to datetime object for use in python functions
+    return datetime.strptime(date, formatstring)

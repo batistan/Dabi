@@ -46,9 +46,9 @@ tr:nth-child(even) {
       <li class="active"><a href="/index">Home</a></li>
       <li><a href="{{url_for('check_schedule')}}">Trains Schedule</a></li>
       <!-- <li><a href="#">Page 2</a></li> -->
-      <form class="navbar-form navbar-left">
+      <form class="navbar-form navbar-left" action="{{ url_for('reservation') }}" method="post" >
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="Look For Reservations">
+        <input type="text" class="form-control" name="passengerID" placeholder="Look For Reservations">
       </div>
       <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
     </form>
