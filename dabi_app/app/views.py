@@ -115,9 +115,9 @@ def search_results():
     #dictionary (train number and train time) for all trains running from station     
     all_trains = get_trains_from_station(start_station,end_station,trip_date,trip_time_of_day)
     ## doesn't work yet, no data on free seats
-    free_trains=[]
+    free_trains = []
     for t in all_trains:
-        if(check_free_seats(start_station,end_station,t['train_num'],trip_date)):
+        if is_seats_available(start_station, end_station, t['train_num'], trip_date):
             free_trains.append(t)
 
     ##Change to return only free trains
@@ -181,8 +181,8 @@ def confirm_book():
 
     #create ticket for user
     ticket_num = create_ticket(session['start_station'],session['end_station'],
-        session['trip_train'],trip_date_time,p_id,session['fare'],session['return_booking'],session['return_train'],return_date_time,)
-    return render_template("confirmation.html",passenger_id=p_id,ticket_num =ticket_num)
+                               session['trip_train'], trip_date_time, p_id, session['fare'], session['return_booking'], session['return_train'], return_date_time,)
+    return render_template("confirmation.html", passenger_id=p_id, ticket_num =ticket_num)
 
 
 @app.route('/reservation', methods=['POST'])
@@ -203,12 +203,20 @@ def cancel_reservation(ticketID):
 @app.route('/reservation/rebook/<int:ticketID>', methods=['GET', 'POST'])
 def rebook_reservation(ticketID):
     record = get_ticket_record(ticketID)
-    if is_seats_available(record[1], record[2], record[3], record[4]) \
-            and is_seats_available(record[1], record[2], record[7], record[8]):
-        rebook_ticket(ticketID)
-        return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=True)
+    round_trip = record[5]
+    if round_trip:
+        if is_seats_available(record[1], record[2], record[3], record[4]) \
+                and is_seats_available(record[1], record[2], record[7], record[8]):
+            rebook_ticket(ticketID)
+            return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=True)
+        else:
+            return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=False)
     else:
-        return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=False)
+        if is_seats_available(record[1], record[2], record[3], record[4]):
+            rebook_ticket(ticketID)
+            return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=True)
+        else:
+            return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=False)
 
 
 # keep these since we might want to use css/images/js in our stuff
