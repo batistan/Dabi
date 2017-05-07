@@ -36,25 +36,20 @@ def create_ticket(start_station,end_station,train_num,trip_date_time,passenger_i
         return cur.fetchall()[0][0]
 
 '''
- update free seats for all segments in the given trip
+ update free seats by decreasing by 1 for all segments in the given trip
 '''
 def update_free_seats(start_station,end_station,train_num,date):
     if(start_station>end_station): start_station,end_station=end_station,start_station
-    ## this will be done in mysql but we can't do stored procedures in sqlite so... :/
-    next_station=start_station+1
-    while(next_station<=end_station):
-        with sql.connect("database.db") as con:
-            q = ("update Seats_free "
-                "SET sf_seats_free = sf_seats_free-1 "
-                "WHERE sf_train_num=? AND sf_date=? AND " 
-                "sf_seg_id in (SELECT segment_id FROM Segments WHERE " 
-                "(segment_north=? AND segment_south=?) OR (segment_south=? AND segment_north=?)); "
-                )
-            cur = con.cursor()
-            cur.execute(q,(train_num, date, start_station, next_station, start_station, next_station))
-            con.commit()
-        start_station=next_station
-        next_station+=1
+    with sql.connect("database.db") as con:
+        q = ("update Seats_free "
+            "SET sf_seats_free = sf_seats_free-1 "
+            "WHERE sf_train_num=? AND sf_date=? AND " 
+            "sf_seg_id in (SELECT segment_id FROM Segments WHERE " 
+            "(segment_north>=? AND segment_south<=?)); "
+            )
+        cur = con.cursor()
+        cur.execute(q,(train_num, date, start_station, end_station))
+        con.commit()
 
 
 '''
@@ -172,6 +167,7 @@ def get_trains_from_station(start_station,end_station,date,time_of_day=None):
         return trains_list
 
 
+#this is a more efficient checking of free seats, call when rebooking.
 def is_seats_available(start_station, end_station, train_num, date):
     with sql.connect('database.db') as con:
         cur = con.cursor()
@@ -184,28 +180,30 @@ def is_seats_available(start_station, end_station, train_num, date):
         return all(i[0] > 0 for i in result)
 
 
+#get seg_id for two stations //declutter queries
+def get_seg_id(start_station,end_station):
+    if(end_station<start_station): start_station,end_station = end_station,start_station
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        q = "SELECT segment_id from Segments where (segment_north>=? and segment_south<=?)"
+        cur.execute(q,(start_station,end_station))
+        return cur.fetchall()[0][0]
+
+
+#this will insert free seat record if booking for a later date and no one has booked yet.
 def check_free_seats(start_station, end_station, train_num, date):
     #start_station; end_station; train_num; date #from user
     if(end_station<start_station): start_station,end_station = end_station,start_station
-
     next_station = start_station+1
     while (next_station<=end_station):
-        #find segment id with north-end = start_station and south_end = next_station
-        #use seg_id, date and train_num to find free seats
-        ## the two actions above should be a SQL stored procedure executed in one line in python
-        ### stored procedure returns boolean for free or not free.
-        # nope.
+        seg_id = get_seg_id(start_station,next_station)
         with sql.connect("database.db") as con:
             cur = con.cursor()
-            # find the one segment with matching north and south stations
-            # query the number of seats it has free for x train on y date
-            # TODO: make this less clunky as sin
-            cur.execute("SELECT sf_seats_free FROM Seats_Free WHERE sf_train_num=? AND sf_date=? AND sf_seg_id in (SELECT segment_id FROM Segments WHERE (segment_north=? AND segment_south=?) OR (segment_south=? AND segment_north=?))", 
-                (train_num, date, start_station, next_station, start_station, next_station))
-        ## store in local var free_seats
-
-        ##TODO change this to retrieve value (fetchone()[0]) when there are values in seats_free
-            free_seats = cur.fetchone()
+            cur.execute("INSERT OR IGNORE INTO Seats_free values (?,?,?,?)",(train_num,seg_id,date,448))
+            con.commit()
+            cur.execute("SELECT sf_seats_free FROM Seats_Free WHERE sf_train_num=? AND sf_date=? AND sf_seg_id =?;", 
+                (train_num, date, seg_id))
+            free_seats = cur.fetchone()[0]
             if(not free_seats): 
                 return False 
         start_station=next_station
@@ -214,8 +212,6 @@ def check_free_seats(start_station, end_station, train_num, date):
 
 # we might need these later. i'm shoving them here just in case
 # we can sort out the details as we go along
-
-
 def sqldate(date):
     # takes python datetime object and converts to string for submission to sql queries
     # TODO: remake schema.sql to use datetime where appropriate

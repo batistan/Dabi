@@ -1,6 +1,5 @@
 from . import app
 from .models import *
-from .forms import *
 import datetime as dt
 #import json
 from flask import render_template, redirect, request, flash, g, session, url_for, send_file
@@ -117,7 +116,8 @@ def search_results():
     ## doesn't work yet, no data on free seats
     free_trains = []
     for t in all_trains:
-        if is_seats_available(start_station, end_station, t['train_num'], trip_date):
+        #will create a free seats record if first passenger for the trip
+        if check_free_seats(start_station, end_station, t['train_num'], trip_date):
             free_trains.append(t)
 
     ##Change to return only free trains
