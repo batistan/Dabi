@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1>Rebook Confirmation</h1>
+    {% if success %}
+        <p>Your ticket reservation <strong>{{ ticketID }}</strong> has been re-booked successfully!</p>
+    {% else %}
+        <p>Your ticket reservation <strong>{{ ticketID }}</strong> has not been re-booked successfully!</p>
+    {% endif %}
+    <p><a href="/">Bring me home</a></p>
+{% endblock %}

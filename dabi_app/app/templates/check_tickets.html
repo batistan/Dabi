@@ -24,8 +24,8 @@
 
 <h3> All Tickets in Database </h3>
 
-
-<p>  {{ tickets }} </p>
-
+{% for ticket in tickets %}
+<p>  {{ ticket }} </p>
+{% endfor %}
 
 {% endblock %}
