@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+<form class="form-inline" method="post" action="{{ url_for('confirm_book') }}" style="text-align: center;">
+<p style="font-weight: bolder;"> Returning User</p>
+<span class="help-block" style="font-weight: bolder;">Trip from {{start_station}} to {{end_station}}</span>  
+ 
+  <div class="form-group">
+    <label class="sr-only" for="exampleInputPassword3">ID</label>
+    <input type="password" class="form-control" name="passenger_id" id="exampleInputPassword3" placeholder="Enter Your ID">
+  </div>
+
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+<hr style="width:50%;"/>
+
+
+<form method="post" action="{{ url_for('confirm_book') }}" style="text-align: center;">
+<p style="font-weight: bolder;"> New User</p>
+	<!-- Text input-->
+<div class="form-group">
+<br/>
+  <label class="col-md-4 control-label" for="textinput">Text Input</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="lname" type="text" placeholder="Last Name" class="form-control input-md"> 
+  </div>
+</div>
+
+<div class="form-group">
+<br/>
+  <label class="col-md-4 control-label" for="textinput">Text Input</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="fname" type="text" placeholder="First Name" class="form-control input-md">
+  </div>
+</div>
+
+<div class="form-group">
+<br/>
+  <label class="col-md-4 control-label" for="textinput">Text Input</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="email" type="text" placeholder="E-mail" class="form-control input-md">
+  </div>
+</div>
+
+<div class="form-group">
+<br/>
+  <label class="col-md-4 control-label" for="textinput">Text Input</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="address" type="text" placeholder="Billing Address" class="form-control input-md">
+  </div>
+</div>
+<br/>
+<!-- <br/> -->
+          <button style="margin-top: 2%;"type="submit" class="button">Submit</button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div class="checking_database" style="text-align: center;">
+<br/>
+<h1> Click on the links to see the Database </h1><hr style="width:50%;"/>
+<br/>
+<a href="{{url_for('check_passengers')}}"> View Passengers </a> <br/> <hr style="width:10%;"/>
+<a href="{{url_for('check_tickets')}}"> View Tickets </a><br/><hr style="width:10%;"/>
+<a href="{{url_for('check_seats')}}"> View Train Free Seats </a></p>
+
+</div>
+{% endblock %}

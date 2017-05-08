@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <form class = "form-control" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.passengerID.label }} {{ form.passengerID() }}
+        {{ form.submit() }}
+    </form>
+{% endblock %}

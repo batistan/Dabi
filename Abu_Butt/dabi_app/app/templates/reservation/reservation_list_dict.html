@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <br/>
+    <div style="display: block; margin-top: 50px; margin-left: 375px; margin-right: 50px ">
+    <table>
+        <thead>
+        <tr>
+            <th>Trip ID</th>
+            <th>Trip Train</th>
+            <th>Origin</th>
+            <th>Destination</th>
+            <th>Travel Date</th>
+            <th>Round Trip?</th>
+            <th>Return Train</th>
+            <th>Return Date</th>
+            <th>Fare</th>
+            <th>Option</th>
+        </tr>
+        </thead>
+    <tbody>
+        {% for row in result %}
+            <tr>
+                <td>{{ row['trip_id'] }}</td>
+                <td>{{ row['trip_train'] }}</td >
+                <td>{{ row['origin'] }}</td>
+                <td>{{ row['destination'] }}</td>
+                <td>{{ row['trip_date'] }}</td>
+                {% if row['round_trip'] %}
+                    <td>&#x2714</td> <!-- Put check-mark if the there is actually a return trip-->
+                    <td>{{ row['return_train'] }}</td>
+                    <td>{{ row['return_date'] }}</td>
+                {% else %}
+                    <td>&#x2718</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                {% endif %}
+                <td>${{ row['fare'] }}</td>
+                {% if row['cancelled'] %}
+                    <td><a href="{{ url_for('rebook_reservation', ticketID=row['trip_id']) }}">Rebook</a></td>
+                {% else %}
+                    <td><a href="{{ url_for('cancel_reservation', ticketID=row['trip_id']) }}">Cancel</a></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+{% endblock %}
