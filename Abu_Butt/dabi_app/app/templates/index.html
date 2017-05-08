@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+
+
+<script type="text/javascript"
+        src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js">
+</script>
+
+<script type="text/javascript"
+        src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js">
+</script>
+<script type="text/javascript"
+        src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.pt-BR.js">
+</script>
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" media="screen"
+                                       href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
+<head>
+<style type="text/css">
+    
+    .page{
+      background-color: black;
+      text-align: center;
+      
+    }
+    h1 {
+      margin-top: 2%;
+    }
+    .content{
+     margin-top: 2%; 
+    }
+    label{
+      font-size: 14px;
+    }
+    .mar-top30{
+      float: middle;
+    }
+    .date{
+      color:red;
+      float: middle;
+      
+    }
+    
+    .tripchoices{
+      margin-bottom: 1%;
+    }
+
+  </style>
+
+</head>
+
+<div class="page">
+  <div class="panel">
+    <div class="title">
+      <h1>Welcome to Namtrak Homepage</h1>
+    </div>
+
+    <div class="content"> 
+      <h2>Search for Trains</h2>
+      <div class="contact-form mar-top30">
+        <form method="post" action="{{ url_for('search_results') }}">
+          
+          <label> <span style="font-style: italic;">Time of day:</span>
+            <select name="triptime" required style="font-style: italic;">
+              <option value="morning" >Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="evening">Evening</option>
+            </select>
+          </label>
+
+          
+
+          <label><span style="font-style: italic;">Date:</span>
+            <div id="datetimepicker" class="input-append date" >
+              <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+
+              </span>
+              <input type="text" class ="input_text" name="tripdate"></input>
+
+            </div>
+          </label>
+
+
+
+
+
+          <label> <span style="font-style: italic;">From station:</span>
+            <select name="startstation" required style="font-style: italic;">
+              <!-- line below isn't the cause of the error-->
+              <option value="default" selected="selected" >Select station...</option>
+              {% for station in all_stations %}
+                <option value= "{{station['station_code']}}"> {{station['station_name']}}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label> <span style="font-style: italic;">To Station:</span>
+            <select name="endstation" required style="font-style: italic;">
+              <!-- line below isn't the cause of the error-->
+              <option value="default" selected="selected">Select station...</option>
+              {% for station in all_stations %}
+                <option value= "{{station['station_code']}}"> {{station['station_name']}}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label> <span style="font-style: italic;">Type of trip:</span>
+            <input type="radio" onclick="javascript:yesnoCheck();" id="onewayradio" name="roundtrip" value="oneway" checked="checked"><em>One-way Trip</em>
+
+            <input type="radio" onclick="javascript:yesnoCheck();" id="roundradio" name="roundtrip" value="round"><em>Round Trip</em><br>
+          </label>
+
+           <div id="roundtrip" style="display:none">
+            <label> <span style="font-style: italic;">Return time of day:</span>
+              <select name="returntime" required style="font-style: italic;">
+                <option value="morning" >Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="evening">Evening</option>
+              </select>
+            </label>
+
+            <label><span style="font-style: italic;">Return date:</span>
+              <div id="returndatetimepicker" class="input-append date">
+                <span class="add-on">
+                  <i data-time-icon="icon-time" data-date-icon="icon-calendar" class="icon-calendar"></i>
+                </span>
+                <input type="text" class ="input_text" name="returndate" readonly ></input>
+
+              </div>
+            </label>
+          </div>
+          
+
+          </label>
+          <button type="submit" class="button" style="font-style: italic;">Submit</button>
+          </form>
+            
+      </div>
+
+    </div>
+
+<script type="text/javascript">
+$('#datetimepicker').datetimepicker({
+  format: 'yyyy-MM-dd',
+  language: 'us-EN'
+});
+$('#returndatetimepicker').datetimepicker({
+  format: 'yyyy-MM-dd',
+  language: 'us-EN'
+});
+    </script>
+
+
+
+    <!-- see http://stackoverflow.com/a/17621661 -->
+    <script type="text/javascript">
+
+function yesnoCheck() {
+  if (document.getElementById('roundradio').checked) {
+    document.getElementById('roundtrip').style.display = 'block';
+  }
+  else document.getElementById('roundtrip').style.display = 'none';
+
+}
+
+    </script>
+
+
+    {% endblock %}

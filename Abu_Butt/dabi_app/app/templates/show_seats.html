@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<br/>
+<br/>
+<br/>
+<br/>
+
+<!-- style="padding:0 50px 0 50px;" -->
+<!-- style="padding:0 40px 0 40px;" -->
+
+<h2 style="text-align:center;"> Seats Status For Train {{train_num}} </h2>
+{% for s in seats %}
+<table>
+	<tr>
+		<td>
+			Seats
+		</td>
+		<td style="padding:0 50px 0 50px;">{{s['seats']}}</td>
+		<td>
+			Between stations:
+		</td>
+		<td style="padding:0 40px 0 40px;">{{s['station1']}}</td>
+		<td style="padding:0 40px 0 40px;">{{s['station2']}}</td>
+	</tr>
+</table>
+	</a>
+	{% endfor %}
+
+
+{% endblock content %}

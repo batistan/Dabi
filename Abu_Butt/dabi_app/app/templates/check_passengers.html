@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="checking_passengers" style="text-align: center;">
+<br/>
+<h1> All Tickets in Passengers Table </h1>
+<br/>
+{% for passenger in passengers %}
+<p> {{ passenger }} </p>
+{% endfor %}
+
+</div>
+{% endblock %}

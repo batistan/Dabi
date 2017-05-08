@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="checking_tickets" style="text-align: center;">
+<h1> Ticket Schema </h1>
+
+<p>CREATE TABLE IF NOT EXISTS Tickets( <br>
+	trip_id INTEGER PRIMARY KEY AUTOINCREMENT,<br>
+	trip_starts INT NOT NULL,<br>
+	trip_ends INT NOT NULL,<br>
+	trip_train INT NOT NULL,<br>
+	trip_date DATETIME,<br>
+	passenger_id INT NOT NULL,<br>
+	round_trip bool,<br>
+	return_train INT DEFAULT NULL,<br>
+	return_date DATETIME DEFAULT NULL,<br>
+	fare decimal(4,2) NOT NULL,<br>
+	cancelled boolean DEFAULT NULL,<br>
+	FOREIGN KEY (trip_starts) REFERENCES Stations(station_id),<br>
+  	FOREIGN KEY (trip_ends) REFERENCES Stations(station_id),<br>
+ 	FOREIGN KEY (trip_train) REFERENCES Trains(train_id),<br>
+  	FOREIGN KEY (passenger_id) REFERENCES Passenger(passenger_id),<br>
+  	FOREIGN KEY (return_train) REFERENCES Trains(train_id)<br>
+);</p>
+
+<h3> All Tickets in Database </h3>
+
+{% for ticket in tickets %}
+<p>  {{ ticket }} </p>
+{% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+<br/>
+<br/>
+
+
+<h2 style="text-align:center;"> Schedule of Trains on <u>{{ trip_date}}</u> in the <u>{{trip_time_of_day}}</u> </h2>
+<h3 style="text-align:center;"> <em>Running from <strong><u>{{start_station}}</u></strong> to <strong><u>{{end_station}}</u></strong> </em> </h3>
+<table >
+	<tr>
+			<th >Train Number</th>
+			{% for t in all_trains %}
+			<td style="padding:0 50px 0 50px; width: 25%;"><em>{{t['train_num']}}</em></td>
+			{% endfor %}
+	</tr>
+
+</table>
+<br/>
+<table >
+	<tr>
+
+			<th style="padding:0 0 0 6px;">Departure</th>
+			{% for t in all_trains %}
+			<td style="padding:10px 15px 5px 15px; width: 25%;"><em>{{t['time_out']}}</em></td>
+			{% endfor %}
+		</tr>
+
+</table>
+
+
+
+{% endblock content %}

@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<head>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 300px;
+        width: 300px;
+      }
+      .controls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 300px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+      #target {
+        width: 345px;
+      }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+    <div class="panel">
+    <center>
+            <button onclick = "RSVPmeetup()" class="button" style="width:180px; background-size:180px 30px; border:none;">Attend this event</button>
+            <button onclick = "unmeetup()" class="button" style="width:200px; background-size:200px 30px; border:none;">Do not attend this event</button><br>
+
+             <h1>{% if attending %}
+                  You are going to this meetup!
+                  {% else %}
+                  You are not going to this meetup!
+                  {% endif %}</h1>
+
+            </center>
+        <div class="title">
+            <h1 style= "font-size: 4em">Meetup information</h1>
+            {% if error %}
+            <p class=error><strong>Error:</strong> {{ error }}
+            {% endif %}
+          </div> 
+
+            <div id = "info" style = "width:50%; float: left">
+                <h1>What class is this meetup for?</h1> {{ classname }} <br><br>
+
+                <h1>Subject:</h1> {{ subject }}<br><br>
+
+                <h1>Start Time:</h1> {{ starttime }}<br><br>
+
+                <h1>End Time:</h1> {{ endtime }}<br><br>
+
+                <h1>Coordinator:</h1> {% if coordinator == "Error" %}
+                Sorry, there doesn't appear to be a valid coordinator!
+                {%else%}
+                {{ coordinator }}
+                {% endif %}<br>
+
+                <input id="pac-input" class="controls input_text" type="text" placeholder="Search Box">
+              </div>
+                <div id = "mapcontainer" style="float: left">
+                <h1>Where is this meetup?</h1>
+                <div id="map"></div>
+                </div>
+                    <script src="../static/js/maps.js"></script>
+                    <script>
+                        function initialize() {
+                            initAutocomplete({{lat}},{{lng}});
+                        }
+                    </script>        
+                    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDm--G1kYbbWlRnXL68TtJdFinSTm71Xa0&libraries=places&callback=initialize"></script>
+
+
+    </div>
+</div>
+<p></p>
+<script>
+    function RSVPmeetup() {
+        $.getJSON("http://localhost:5000/doRSVPJSON", {
+      uid: {{uid}},
+      eid: {{meetid}}
+       }, function(data) {alert("Hello!");});
+        location.reload();
+       return false;}
+
+       function unmeetup() {
+        $.getJSON("http://localhost:5000/unRSVP", {
+      uid: {{uid}},
+      eid: {{meetid}}
+       }, function(data) {alert("Hello!");});
+        location.reload();
+       return false;}
+</script>
+
+{% endblock %}
