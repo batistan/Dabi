@@ -146,15 +146,14 @@ def get_trains_from_station(start_station,end_station,date,time_of_day=None):
     
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        squery=("select sa.train_num, sa.time_out from stops_at sa "
-                "join trains t "
-                "on (t.train_num=sa.train_num AND t.direction=? AND t.train_days=?) "
-                "where "
-                "sa.station_id = ? AND sa.time_out between ? AND ?; "
+        squery=("select sa.train_num, sa.time_out, sa2.time_in " 
+                "from stops_at sa join trains t on "
+                "(t.train_num=sa.train_num and t.direction=? and t.train_days=?) " 
+                "join stops_at sa2 on (sa2.train_num=t.train_num) "
+                "where sa.station_id=? and sa2.station_id=? AND sa.time_out between ? AND ?; "
                 )
 
-        cur.execute(squery,
-            (direction, day, start_station, start_train_time,end_train_time))
+        cur.execute(squery,(direction, day, start_station, end_station, start_train_time,end_train_time))
 
         a_trains=list(cur.fetchall())
         trains_list = []
@@ -162,6 +161,7 @@ def get_trains_from_station(start_station,end_station,date,time_of_day=None):
             train = {}
             train['train_num'] = t[0]
             train['time_out'] = t[1]
+            train['arrival'] = t[2]
 
             trains_list.append(train)
         return trains_list
