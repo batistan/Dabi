@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<p> Ticket Schema</p>
+<div class="checking_tickets" style="text-align: center;">
+<h1> Ticket Schema </h1>
 
 <p>CREATE TABLE IF NOT EXISTS Tickets( <br>
 	trip_id INTEGER PRIMARY KEY AUTOINCREMENT,<br>
@@ -27,5 +28,6 @@
 {% for ticket in tickets %}
 <p>  {{ ticket }} </p>
 {% endfor %}
+</div>
 
 {% endblock %}
