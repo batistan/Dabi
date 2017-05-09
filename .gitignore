@@ -1,0 +1,22 @@
+.idea/
+venv/
+flaskapp/
+__pycache__/
+
+*.pyc
+
+# image files
+*.JPG
+*.jpg
+*.JPEG
+*.jpeg
+*.PNG
+*.png
+
+# pdflatex processing files
+*.aux
+*.log
+
+# vim swap files
+*.swp
+*.swo
