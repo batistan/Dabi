@@ -4,6 +4,9 @@ import datetime as dt
 #import json
 from flask import render_template, redirect, request, flash, g, session, url_for, send_file
 
+
+app.secret_key = "xsjnfeDSWID8erawv"
+
 # home page
 # see templates directory for what this whole templates thing is about
 @app.route('/', methods=["GET", "POST"])
