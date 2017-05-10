@@ -17,7 +17,7 @@ def create_passenger(p_lname,p_fname,p_address,p_email):
         cur = con.cursor()
         cur.execute("INSERT INTO Passengers (passenger_lname,passenger_fname,passenger_billing_address,passenger_email) VALUES (?,?,?,?);", (p_lname, p_fname,p_address,p_email))
         con.commit()
-        cur.execute("SELECT LAST_INSERT_ID();")
+        cur.execute("SELECT LAST_INSERT_ROWID();")
         return cur.fetchall()[0][0]
 
 
