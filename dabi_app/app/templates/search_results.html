@@ -8,30 +8,34 @@
 <h2 style="text-align:center;"> Trains available on <u>{{ trip_date}}</u> in the <u>{{trip_time_of_day}} </u></h2>
 <h3 style="text-align:center;"> <em>Travelling from <strong><u>{{start_station}}</u></strong> to <strong><u>{{end_station}} </u></strong></em> </h3>
 
-<table >
+<table style="max-width:800px;" align="center">
 	<tr>
 			<th >Train Number</th>
-			{% for t in all_trains %}
-			<td style="padding:0 50px 0 50px; width: 25%;"> 
-			<a href="{{ url_for('booktrip', train_num=t['train_num'], train_time=t['time_out'])}}">
-			<em>{{t['train_num']}}</em>
-			</td>
-			{% endfor %}
-	</tr>
-
-</table>
-<br/>
-<table >
-	<tr>
-
 			<th style="padding:0 0 0 6px;">Departure</th>
+			<th style="padding:0 0 0 6px;">Arrival</th>
+			<th style="padding:0 0 0 6px;">Trip Fare</th>
+	</tr>
 			{% for t in all_trains %}
-			<td style="padding:10px 15px 5px 15px; width: 25%;">
-			<a href="{{ url_for('booktrip', train_num=t['train_num'], train_time=t['time_out'])}}">
-			<em>{{t['time_out']}}</em></td>
+	<tr style="padding:0 50px 0 50px; width: 25%;" >
+			<td><a href="{{ url_for('booktrip', train_num=t['train_num'], train_time=t['time_out'])}}"> 
+			<em>{{t['train_num']}}</em> </a>
+			</td>
+			<td><a href="{{ url_for('booktrip', train_num=t['train_num'], train_time=t['time_out'])}}">
+				{{t['time_out']}}
+				</a>
+			</td>
+			<td>	<a href="{{ url_for('booktrip', train_num=t['train_num'], train_time=t['time_out'])}}">
+				{{t['arrival']}}
+				</a>
+			</td>
+			<td>
+				${{fare}}
+			</td>
+	</tr>
+	</a>
 			{% endfor %}
-		</tr>
 
 </table>
+
 
 {% endblock content %}

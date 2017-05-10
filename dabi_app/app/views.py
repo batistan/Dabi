@@ -119,7 +119,7 @@ def search_results():
             free_trains.append(t)
 
     ##Change to return only free trains
-    return render_template("search_results.html",all_trains=free_trains, trip_date=trip_date, trip_time_of_day=trip_time_of_day, start_station = session['start_station_name'], end_station = session['end_station_name'], )
+    return render_template("search_results.html",all_trains=free_trains, trip_date=trip_date, trip_time_of_day=trip_time_of_day, start_station = session['start_station_name'], end_station = session['end_station_name'],fare=session['fare'] )
 
 
 ## get user (or new user) info and send to confirmation through the form.
