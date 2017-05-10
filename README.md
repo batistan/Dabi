@@ -1,15 +1,15 @@
 # Dabi
 Databases Group Project (Namtrak)
 
-Install flask by running:
+Install `flask` by running:
 
 `pip install flask`
 
 Install `pip` if you haven't since it's pretty useful anyway.
 
-Go into the `flaskapp/` directory, run the command:
+Go into the `dabi_app` directory, run:
 
-`python2 flask`
+`python2 run.py`
 
 Go to http://localhost:5000/ (or http://127.0.0.1:5000/) in your web browser and you'll get the index page. Alternatively, add a page e.g. http://localhost:5000/search_results.html to go directly to it.
 
@@ -17,7 +17,7 @@ Remember your browser has a cache, so any changes you make while the server is u
 
 The directories are organized as such:
 
-* the root directory contains this file, the `requirements.txt` file which outlines the packages required to run `flask`, as well as the required versions, and the `new_schema.sql` file, which was used to initialize our database with the correct tables and a some sample data. Within the root directory we also have the following directories:
+* the root directory contains this file, the `requirements.txt` file which outlines the packages required to run `flask`, as well as the required versions, and the `new_schema.sql` file, which was used to initialize our database with the correct tables and some sample data. Within the root directory we also have the following directories:
 
     * `report` directory: Contains TEX file and resulting PDF file for the report submitted earlier in the semester.
 
@@ -25,13 +25,13 @@ The directories are organized as such:
     
         * The `database.db` file contains our SQLite database. We are currently in the process of shifting away from SQLite and towards MySQL.
 
-        * The `__init__.py` file defines the location of files containing code necessary for flask to properly display pages and respond to requests.
+        * The `__init__.py` file defines the location of files containing code necessary for `flask` to properly display pages and respond to requests.
 
         * The `create_seats_free.py` file is used to generate the `create_seats_free.sql` file, which in turn was used to populate the `free_seats` table of our database. We elected to automate this process due to the sheer number of entries that `free_seats` would require. For reference, the python script is only 253 bytes in size, while the SQL file generated is over 700 kilobytes. Even the `new_schema.sql` file, used to initialize the database, is less than a tenth of that size, at 51.2 kilobytes.
 
         * The `app` directory contains the following:
         
-            * `__init__.py` is required for flask to run properly.
+            * `__init__.py` is required for `flask` to run properly.
             
             * `models.py` contains various utility functions called on to interface with the database as well as to resolve variables used to render templates.
 
