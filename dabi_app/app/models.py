@@ -246,11 +246,10 @@ def get_passenger_reservation(passengerID):
 def rebook_ticket(ticketID):
     with sql.connect('database.db') as con:
         cur = con.cursor()
-        query_stmt = ("INSERT INTO Tickets (trip_starts, trip_ends, trip_train, trip_date, passenger_id, round_trip, return_train, return_date, fare) "
-                      "SELECT trip_starts, trip_ends, trip_train, trip_date, passenger_id, round_trip, return_train, return_date, fare "
-                      "FROM Tickets "
-                      "WHERE trip_id = ?")
-        cur.execute(query_stmt, (ticketID, ))
+        q = (" UPDATE Tickets "
+            "SET cancelled = 0 "            
+            "WHERE trip_id = ? ")
+        cur.execute(q, (ticketID, ))
         con.commit()
 
 
