@@ -4,11 +4,6 @@ import collections
 import os
 from datetime import datetime
 
-# This file is basically how the webserver interfaces with the database
-# we'll have to replace these with our own functions working on our own database
-# for now I'm leaving them here for reference
-
-
 '''
 create new passenger
 '''
@@ -285,6 +280,8 @@ def delay_train(trainID, amt, station):
         query_stmt = ("SELECT station_id FROM Temp_Stops_At where train_num = ? AND station_id >= ? ORDER BY station_id ASC")
         cur.execute(query_stmt, (trainID, station))
 
+        # TODO: convert to MySQL after transitioning from SQLite
+        # dateadd?
         for st in cur.fetchall():
             query_stmt = ("UPDATE Temp_Stops_At SET time_in = TIME(time_in, '+? minute'), time_out = TIME(time_out,'+? minute') WHERE train_num = ? AND station_id = ?")
             cur.execute(query_stmt, (amt, amt, trainID, st))

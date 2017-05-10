@@ -4,10 +4,6 @@ import datetime as dt
 #import json
 from flask import render_template, redirect, request, flash, g, session, url_for, send_file
 
-# don't ask what this is for. i don't remember either.
-app.secret_key = "donttellanyonemysecret"
-
-
 # home page
 # see templates directory for what this whole templates thing is about
 @app.route('/', methods=["GET", "POST"])
@@ -42,8 +38,9 @@ def check_passengers():
 
 @app.route('/train_status')
 def train_status():
+    # TODO: make pretty
+    # add template file
     return "Pulling train data..."
-
 
 @app.route('/train_seats')
 def check_seats():
@@ -114,6 +111,7 @@ def search_results():
     #dictionary (train number and train time) for all trains running from station     
     all_trains = get_trains_from_station(start_station,end_station,trip_date,trip_time_of_day)
     ## doesn't work yet, no data on free seats
+    # TODO: should be working now, need to test
     free_trains = []
     for t in all_trains:
         #will create a free seats record if first passenger for the trip
@@ -218,8 +216,6 @@ def rebook_reservation(ticketID):
         else:
             return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=False)
 
-
-# keep these since we might want to use css/images/js in our stuff
 @app.route("/css/<css>")
 def style_render(css):
     return render_template("css/%s"%css)
@@ -235,8 +231,6 @@ def image_render(image):
 def js_render(js):
     return render_template("js/%s"%js)
 
-
-# don't know what this is so it's probably important
 @app.route("/js/moment-develop/moment.js")
 def moment_js_render():
     return render_template("/js/moment-develop/moment.js")
