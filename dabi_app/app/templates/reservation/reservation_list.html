@@ -35,10 +35,14 @@
                     <td>N/A</td>
                 {% endif %}
                 <td>${{ row[8] }}</td>
-                {% if row[9] %}
-                    <td><a href="{{ url_for('rebook_reservation', ticketID=row[0]) }}">Rebook</a></td>
-                    {% else %}
-                    <td><a href="{{ url_for('cancel_reservation', ticketID=row[0]) }}">Cancel</a></td>
+                {% if trip_date > current_date%}
+                    {% if row[9] %}
+                        <td><a href="{{ url_for('rebook_reservation', ticketID=row[0]) }}">Rebook</a></td>
+                        {% else %}
+                        <td><a href="{{ url_for('cancel_reservation', ticketID=row[0]) }}">Cancel</a></td>
+                    {% endif %}
+                {% else %}
+                    <td/></td>
                 {% endif %}
             </tr>
         {% endfor %}
