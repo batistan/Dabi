@@ -194,7 +194,7 @@ def reservation():
     return render_template('/reservation/reservation_list.html',
                            result=result,
                            current_date=current_date,
-                           trip_date=None if not result else pydate(result[0][4]))
+                           trip_date=None if not result else datetime.strptime(result[0][4], '%Y-%m-%d %H:%M:%S'))
 
 
 @app.route('/reservation/cancel/<int:ticketID>', methods=['GET', 'POST'])
