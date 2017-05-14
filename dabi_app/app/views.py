@@ -193,8 +193,7 @@ def reservation():
     result = get_passenger_reservation(pid)
     return render_template('/reservation/reservation_list.html',
                            result=result,
-                           current_date=current_date,
-                           trip_date=None if not result else datetime.strptime(result[0][4], '%Y-%m-%d %H:%M:%S'))
+                           current_date=current_date)
 
 
 @app.route('/reservation/cancel/<int:ticketID>', methods=['GET', 'POST'])
@@ -265,3 +264,9 @@ def login():
     else:
         return render_template("login.html")
 
+
+@app.template_filter('strftime')
+def pydate_only(date):
+    formatstring = "%Y-%m-%d %H:%M:%S"
+    # takes string and converts to datetime object for use in python functions
+    return datetime.strptime(date, formatstring)
