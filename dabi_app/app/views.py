@@ -191,7 +191,10 @@ def reservation():
     current_date = datetime.today()
     pid = request.form['passengerID']
     result = get_passenger_reservation(pid)
-    return render_template('/reservation/reservation_list.html', result=result, current_date=current_date.isoformat())
+    return render_template('/reservation/reservation_list.html',
+                           result=result,
+                           current_date=current_date,
+                           trip_date=None if not result else datetime.strptime(result[0][4], '%Y-%m-%d %H:%M:%S'))
 
 
 @app.route('/reservation/cancel/<int:ticketID>', methods=['GET', 'POST'])
