@@ -3,6 +3,7 @@ import json
 import collections
 import os
 from datetime import datetime
+from random import randint
 
 '''
 create new passenger
@@ -302,3 +303,22 @@ def pydate(date):
     formatstring = "%Y-%m-%d"
     # takes string and converts to datetime object for use in python functions
     return datetime.strptime(date, formatstring)
+
+
+# returns a list of tuple of all rows in `temp_stops_at` table
+def get_train_status():
+    with sql.connect('database.db') as con:
+        cur = con.cursor()
+        query_stmt = ("SELECT * FROM temp_stops_at")
+        cur.execute(query_stmt)
+        return cur.fetchall()
+
+
+# return a tuple of a train randomly selected from the `Trains` table
+def delay_random_train():
+    random_train = randint(1, 27)
+    with sql.connect('database.db') as con:
+        cur = con.cursor()
+        query_stmt = ("SELECT train_num, train_days, direction FROM Trains WHERE train_num = ?")
+        cur.execute(query_stmt, (random_train,))
+        return cur.fetchone()

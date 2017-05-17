@@ -35,7 +35,7 @@
                     <td>N/A</td>
                 {% endif %}
                 <td>${{ row[8] }}</td>
-                {% if trip_date > current_date%}
+                {% if (row[4]|strftime) > current_date %}
                     {% if row[9] %}
                         <td><a href="{{ url_for('rebook_reservation', ticketID=row[0]) }}">Rebook</a></td>
                         {% else %}
