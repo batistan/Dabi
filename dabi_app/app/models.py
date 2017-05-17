@@ -269,6 +269,9 @@ def get_ticket_record(ticketID):
         return cur.fetchone()
 
 
+
+
+''' Won't be using this, remove later.
 def delay_train(trainID, amt, station):
     with sql.connect('database.db') as con:
         cur = con.cursor()
@@ -284,7 +287,7 @@ def delay_train(trainID, amt, station):
         for st in cur.fetchall():
             query_stmt = ("UPDATE Temp_Stops_At SET time_in = TIME(time_in, '+? minute'), time_out = TIME(time_out,'+? minute') WHERE train_num = ? AND station_id = ?")
             cur.execute(query_stmt, (amt, amt, trainID, st))
-
+'''
 
 def pydate(date):
     formatstring = "%Y-%m-%d"
