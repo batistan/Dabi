@@ -199,7 +199,11 @@ def reservation():
 
 @app.route('/reservation/cancel/<int:ticketID>', methods=['GET', 'POST'])
 def cancel_reservation(ticketID):
+    t_info = get_ticket_record(ticketID)
     cancel_ticket(ticketID)
+    update_free_seats(t_info[1],t_info[2],t_info[3],pydate_only(t_info[4]),1)
+    if(t_info[6]): 
+        update_free_seats(t_info[2],t_info[1],t_info[7],t_info[8],1)
     return render_template('reservation/confirmation_cancel.html', ticketID=ticketID)
 
 
@@ -207,17 +211,24 @@ def cancel_reservation(ticketID):
 @app.route('/reservation/rebook/<int:ticketID>', methods=['GET', 'POST'])
 def rebook_reservation(ticketID):
     record = get_ticket_record(ticketID)
-    round_trip = record[5]
+    round_trip = record[6]
     if round_trip:
         if is_seats_available(record[1], record[2], record[3], record[4]) \
                 and is_seats_available(record[1], record[2], record[7], record[8]):
             rebook_ticket(ticketID)
+
+            update_free_seats(record[1],record[2],record[3],pydate_only(record[4]))
+
+            update_free_seats(record[2],record[1],record[7],pydate_only(record[8]))
+
             return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=True)
         else:
             return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=False)
     else:
         if is_seats_available(record[1], record[2], record[3], record[4]):
             rebook_ticket(ticketID)
+            update_free_seats(record[1],record[2],record[3],pydate_only(record[4]))
+
             return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=True)
         else:
             return render_template('reservation/confirmation_rebook.html', ticketID=ticketID, success=False)

@@ -31,19 +31,20 @@ def create_ticket(start_station,end_station,train_num,trip_date_time,passenger_i
         return cur.fetchall()[0][0]
 
 '''
- update free seats by decreasing by 1 for all segments in the given trip
+ update free seats by adding or removing free seats, 
+ default remove one seat for all segments in the given trip
 '''
-def update_free_seats(start_station,end_station,train_num,date):
+def update_free_seats(start_station,end_station,train_num,date, diff=-1):
     if(start_station>end_station): start_station,end_station=end_station,start_station
     with sql.connect("database.db") as con:
         q = ("update Seats_free "
-            "SET sf_seats_free = sf_seats_free-1 "
+            "SET sf_seats_free = sf_seats_free + (?) "
             "WHERE sf_train_num=? AND sf_date=? AND " 
             "sf_seg_id in (SELECT segment_id FROM Segments WHERE " 
             "(segment_north>=? AND segment_south<=?)); "
             )
         cur = con.cursor()
-        cur.execute(q,(train_num, date, start_station, end_station))
+        cur.execute(q,(diff,train_num, date, start_station, end_station))
         con.commit()
 
 
@@ -218,6 +219,12 @@ def sqldate(date):
     return dt
 
 
+#for dealing with datetime string
+def pydate_only(date):
+    formatstring = "%Y-%m-%d %H:%M:%S"
+    # takes string and converts to datetime object for use in python functions
+    return datetime.strptime(date, formatstring).date()
+
 def pydate(date):
     formatstring = "%Y-%m-%d"
     # takes string and converts to datetime object for use in python functions
@@ -261,6 +268,7 @@ def cancel_ticket(ticketID):
         con.commit()
 
 
+
 def get_ticket_record(ticketID):
     with sql.connect('database.db') as con:
         cur = con.cursor()
@@ -286,6 +294,7 @@ def delay_train(trainID, amt, station):
         # dateadd?
         for st in cur.fetchall():
             query_stmt = ("UPDATE Temp_Stops_At SET time_in = TIME(time_in, '+? minute'), time_out = TIME(time_out,'+? minute') WHERE train_num = ? AND station_id = ?")
+<<<<<<< HEAD
             cur.execute(query_stmt, (amt, amt, trainID, st))
 '''
 
