@@ -2,7 +2,7 @@ import sqlite3 as sql
 import json
 import collections
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import randint
 
 '''
@@ -298,11 +298,10 @@ def delay_train(trainID, amt, station):
 <<<<<<< HEAD
             cur.execute(query_stmt, (amt, amt, trainID, st))
 '''
-
-def pydate(date):
-    formatstring = "%Y-%m-%d"
-    # takes string and converts to datetime object for use in python functions
-    return datetime.strptime(date, formatstring)
+def pytime(time):
+    formatstring = "%H:%M:%S"
+    # takes time string and converts to datetime object for use in python functions
+    return datetime.strptime(time, formatstring)
 
 
 # returns a list of tuple of all rows in `temp_stops_at` table
@@ -322,3 +321,43 @@ def delay_random_train():
         query_stmt = ("SELECT train_num, train_days, direction FROM Trains WHERE train_num = ?")
         cur.execute(query_stmt, (random_train,))
         return cur.fetchone()
+
+'''
+    + for each train, starting from first station:
+        * if value of time_out for any train in stops_at_temp is greater than current train time_out, 
+        then get difference and add y minutes = new_delay, save first station of new_delay
+        * add new_delay to time_in and time_out from first station of new delay 
+        to last station train stops at (station_id++),
+'''
+
+def update_train_status(train_num,direction):
+    if(train_num<27): stops = list(range(26,0,-1)) else: stops=[26,23,19,17,14,10,4,3,1]
+    if(direction==0): stops = reversed(stops)
+    with sql.connect('database.db') as con:
+        cur = con.cursor()
+        #insert schedule time into temp_stops_at
+        q = ("insert into temp_stops_at select * from stops_at where train_num=?")
+        cur.execute(q,(train_num,))
+        for st in stops:
+            #get the time lastest time out for any train (same direction) in temp stops_at
+            q = ("select max(sa.time_out) from temp_stops_at sa join trains t on "
+            "(t.train_num = sa.train_num AND t.direction = ?) "
+            "where sa.station_id = ? order by station_id; "
+            )
+            cur.execute(q,(direction, st))
+            latest_train = pytime(cur.fetchone()[0])
+            #get current train's scheduled time out
+            q = ("select time_out from temp_stops_at where train_num = ? and station_id = ?;")
+            cur.execute(q,(train_num,st))
+            sched_time = pytime(cur.fetchone()[0])
+            if(latest_train>sched_time):
+                delay_time = latest_train - sched_time + timedelta(minutes=5)
+                #update all stations arrival time with new delay
+                q=("update temp_stops_at "
+                    "set time_out = time_out + ?, time_in = time_in + ? "
+                    "where train_num = ? AND station_id >= ?")
+                cur.execute(q,(delay_time,delay_time,train_num,st))
+
+
+
+
