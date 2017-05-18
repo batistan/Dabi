@@ -337,11 +337,11 @@ def delay_random_train(offset):
         # perform correction to the date of arrival and departure of
         # trains that span to more than one day
         correct_stmt = ("UPDATE temp_stops_at SET time_in = CASE "
-                        "WHEN time_in > datetime('00:00:00') "
+                        "WHEN time_in > datetime('24:00:00') "
                         "THEN DATETIME(date('now'), time_in) "
                         "ELSE DATETIME(date('now'), '+1 day', time_in) END, "
                         "time_out = CASE "
-                        "WHEN time_out > datetime('00:00:00') "
+                        "WHEN time_out > datetime('24:00:00') "
                         "THEN DATETIME(date('now'), time_out) "
                         "ELSE DATETIME(date('now'), '+1 day', time_out) END;")
         cur.execute(correct_stmt)
