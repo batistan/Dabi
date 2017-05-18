@@ -314,11 +314,33 @@ def get_train_status():
         return cur.fetchall()
 
 
-# return a tuple of a train randomly selected from the `Trains` table
-def delay_random_train():
-    random_train = randint(1, 27)
+# randomly pick a train
+# put all the records from the `stops_at` table into `temp_stops_at` table
+# apply specified offset to all the data in `time_in` and `time_out` fields in `temp_stops_at` table
+def delay_random_train(offset):
     with sql.connect('database.db') as con:
         cur = con.cursor()
-        query_stmt = ("SELECT train_num, train_days, direction FROM Trains WHERE train_num = ?")
-        cur.execute(query_stmt, (random_train,))
+
+        # clear the `temp_stops_at` table
+        cur.execute("DELETE from temp_stops_at")
+        con.commit()
+
+        # get a random train number and append all of its record
+        # to `temp_stops_at` table from `stops_at` table
+        random_train = randint(1, 27)
+        append_stmt = ("INSERT INTO temp_stops_at (station_id, train_num, time_in, time_out)"
+                       "SELECT * FROM stops_at "
+                       "WHERE stops_at.train_num = ?")
+        cur.execute(append_stmt, (random_train,))
+        con.commit()
+
+        # introduce delay to all `time_in` and `time_out` fields in `temp_stops_at` table
+        offset_string = ('+' + str(offset) + ' minutes') if offset >= 0 else (str(offset) + ' minutes')
+        delay_stmt = ("UPDATE temp_stops_at SET time_in = TIME(time_in, ?), time_out = TIME(time_out, ?)")
+        cur.execute(delay_stmt, (offset_string, offset_string))
+        con.commit()
+
+        # return the tuple (train_days, direction) of the randomly picked train
+        get_train_stmt = ("SELECT train_days, direction FROM Trains where train_num = ?")
+        cur.execute(get_train_stmt, (random_train,))
         return cur.fetchone()
