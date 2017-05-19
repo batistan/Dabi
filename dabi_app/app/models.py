@@ -335,16 +335,22 @@ def update_train_status(train_num,direction):
         #insert schedule time into temp_stops_at
         q = ("insert into temp_stops_at select * from stops_at where train_num=?")
         cur.execute(q,(train_num,))
+        #get the train's starting station from direction
+        if direction == 1: first_station = 26 else first_station = 1
+        q = ("select time_in from stops_at where train_num = ? AND station_id = ")
+        cur.execute(q,(train_num,first_station))
+        #if any time is less than the starting time then it's crossed to new day
+        min_time = cur.fetchone()[0]
         #from ichwan's code. finger's crossed 😐
         correct_stmt = ("UPDATE temp_stops_at SET time_in = CASE "
-                "WHEN time_in > datetime('00:00:00') "
+                "WHEN time_in > ? "
                 "THEN DATETIME(date('now'), time_in) "
                 "ELSE DATETIME(date('now'), '+1 day', time_in) END, "
                 "time_out = CASE "
-                "WHEN time_out > datetime('00:00:00') "
+                "WHEN time_out > ? "
                 "THEN DATETIME(date('now'), time_out) "
                 "ELSE DATETIME(date('now'), '+1 day', time_out) END;")
-        cur.execute(correct_stmt)
+        cur.execute(correct_stmt,(min_time,min_time))
         for st in stops:
             #get the time lastest time out for any train (same direction) in temp stops_at
             q = ("select max(sa.time_out) from temp_stops_at sa join trains t on "
