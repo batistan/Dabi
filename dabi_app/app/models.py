@@ -2,7 +2,7 @@ import sqlite3 as sql
 import json
 import collections
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import randint
 
 '''
@@ -277,41 +277,41 @@ def get_ticket_record(ticketID):
         cur.execute(query_stmt, (ticketID,))
         return cur.fetchone()
 
-
-
-
-''' Won't be using this, remove later.
-def delay_train(trainID, amt, station):
-    with sql.connect('database.db') as con:
-        cur = con.cursor()
-        query_stmt = ("CREATE TABLE Temp_Stops_At AS"
-                      "SELECT * FROM Stops_At")
-        cur.execute(query_stmt)
-
-        query_stmt = ("SELECT station_id FROM Temp_Stops_At where train_num = ? AND station_id >= ? ORDER BY station_id ASC")
-        cur.execute(query_stmt, (trainID, station))
-
-        # TODO: convert to MySQL after transitioning from SQLite
-        # dateadd?
-        for st in cur.fetchall():
-            query_stmt = ("UPDATE Temp_Stops_At SET time_in = TIME(time_in, '+? minute'), time_out = TIME(time_out,'+? minute') WHERE train_num = ? AND station_id = ?")
-<<<<<<< HEAD
-            cur.execute(query_stmt, (amt, amt, trainID, st))
-'''
-
-def pydate(date):
-    formatstring = "%Y-%m-%d"
-    # takes string and converts to datetime object for use in python functions
-    return datetime.strptime(date, formatstring)
+def pytime(time):
+    formatstring = "%H:%M:%S"
+    # takes time string and converts to datetime object for use in python functions
+    return datetime.strptime(time, formatstring)
 
 
 # returns a list of tuple of all rows in `temp_stops_at` table
-def get_train_status():
+def get_train_status(train_num):
     with sql.connect('database.db') as con:
         cur = con.cursor()
-        query_stmt = ("SELECT * FROM temp_stops_at")
-        cur.execute(query_stmt)
+        query_stmt = ("SELECT station_id,time_in,delayed FROM temp_stops_at where train_num = ?")
+        cur.execute(query_stmt,(train_num,))
         return cur.fetchall()
+
+def create_temp_stops_at():
+    with sql.connect('database.db') as con:
+        cur = con.cursor()
+        q=(" CREATE TABLE if not exists temp_stops_at("
+        "station_id int, train_num int ,time_in DATETIME, time_out DATETIME, "
+        "delayed bool default 0, primary key (station_id, train_num), "
+        "FOREIGN KEY(train_num) REFERENCES Trains(train_num), "
+        "FOREIGN KEY(station_id) REFERENCES Stations(station_id)); "
+        )
+        cur.execute(q)
+        con.commit()
+
+
+def update_all_trains(train_days,direction):
+    with sql.connect('dataase.db') as con:
+        cur = con.cursor()
+        q = (" select train_num from Trains where train_days = ? AND direction = ?")
+        cur.execute(q,(train_days,direction))
+        for t in cur.fetchall():
+            update_train_status(t[0],direction)
+
 
 
 # randomly pick a train
@@ -320,31 +320,38 @@ def get_train_status():
 def delay_random_train(offset):
     with sql.connect('database.db') as con:
         cur = con.cursor()
-
         # clear the `temp_stops_at` table
         cur.execute("DELETE from temp_stops_at")
         con.commit()
-
         # get a random train number and append all of its record
         # to `temp_stops_at` table from `stops_at` table
-        random_train = randint(1, 27)
+        # I changed this to 47 since we can delay any type of train
+        random_train = randint(1, 47)
         append_stmt = ("INSERT INTO temp_stops_at (station_id, train_num, time_in, time_out)"
                        "SELECT * FROM stops_at "
                        "WHERE stops_at.train_num = ?")
         cur.execute(append_stmt, (random_train,))
         con.commit()
-
         # perform correction to the date of arrival and departure of
         # trains that span to more than one day
+        cur.execute("select direction from trains where train_num = ?",(random_train,))
+        direction = cur.fetchone()[0]
+        #get the train's starting station from direction
+        first_station = 26 if direction == 1  else 1
+        q = ("select time_in from stops_at where train_num = ? AND station_id = ")
+        cur.execute(q,(train_num,first_station))
+        #if any time is less than the starting time then it's crossed to new day
+        min_time = cur.fetchone()[0]
+        #from ichwan's code. finger's crossed
         correct_stmt = ("UPDATE temp_stops_at SET time_in = CASE "
-                        "WHEN time_in > datetime('24:00:00') "
-                        "THEN DATETIME(date('now'), time_in) "
-                        "ELSE DATETIME(date('now'), '+1 day', time_in) END, "
-                        "time_out = CASE "
-                        "WHEN time_out > datetime('24:00:00') "
-                        "THEN DATETIME(date('now'), time_out) "
-                        "ELSE DATETIME(date('now'), '+1 day', time_out) END;")
-        cur.execute(correct_stmt)
+                "WHEN time_in > ? "
+                "THEN DATETIME(date('now'), time_in) "
+                "ELSE DATETIME(date('now'), '+1 day', time_in) END, "
+                "time_out = CASE "
+                "WHEN time_out > ? "
+                "THEN DATETIME(date('now'), time_out) "
+                "ELSE DATETIME(date('now'), '+1 day', time_out) END;")
+        cur.execute(correct_stmt,(min_time,min_time))
         con.commit()
 
         # introduce delay to all `time_in` and `time_out` fields in `temp_stops_at` table
@@ -357,3 +364,54 @@ def delay_random_train(offset):
         get_train_stmt = ("SELECT train_days, direction FROM Trains where train_num = ?")
         cur.execute(get_train_stmt, (random_train,))
         return cur.fetchone()
+
+
+#update trains times if affected by delay in temp_stops_at
+def update_train_status(train_num,direction):
+    if(train_num<27): 
+        stops = list(range(26,0,-1)) 
+    else:
+        stops=[26,23,19,17,14,10,4,3,1]
+    if(direction==0): 
+        stops = reversed(stops)
+    with sql.connect('database.db') as con:
+        cur = con.cursor()
+        #insert schedule time into temp_stops_at
+        q = ("insert into temp_stops_at select * from stops_at where train_num=?")
+        cur.execute(q,(train_num,))
+        #get the train's starting station from direction
+        first_station = 26 if direction == 1  else 1
+        q = ("select time_in from stops_at where train_num = ? AND station_id = ")
+        cur.execute(q,(train_num,first_station))
+        #if any time is less than the starting time then it's crossed to new day
+        min_time = cur.fetchone()[0]
+        #from ichwan's code. finger's crossed
+        correct_stmt = ("UPDATE temp_stops_at SET time_in = CASE "
+                "WHEN time_in > ? "
+                "THEN DATETIME(date('now'), time_in) "
+                "ELSE DATETIME(date('now'), '+1 day', time_in) END, "
+                "time_out = CASE "
+                "WHEN time_out > ? "
+                "THEN DATETIME(date('now'), time_out) "
+                "ELSE DATETIME(date('now'), '+1 day', time_out) END;")
+        cur.execute(correct_stmt,(min_time,min_time))
+        for st in stops:
+            #get the time lastest time out for any train (same direction) in temp stops_at
+            q = ("select max(sa.time_out) from temp_stops_at sa join trains t on "
+            "(t.train_num = sa.train_num AND t.direction = ?) "
+            "where sa.station_id = ? order by station_id; "
+            )
+            cur.execute(q,(direction, st))
+            latest_train = pytime(cur.fetchone()[0])
+            #get current train's scheduled time out
+            q = ("select time_out from temp_stops_at where train_num = ? and station_id = ?;")
+            cur.execute(q,(train_num,st))
+            sched_time = pydate(cur.fetchone()[0])
+            if(latest_train>sched_time):
+                delay_time = (latest_train - sched_time + timedelta(minutes=5)).total_seconds()
+                #update all stations arrival time with new delay
+                q=("update temp_stops_at "
+                    "set time_out = datetime(time_out,'+? seconds'), time_in = datetime(time_in,'+? seconds'), delayed = 1 "
+                    "where train_num = ? AND station_id >= ?")
+                cur.execute(q,(delay_time,delay_time,train_num,st))
+        con.commit()
