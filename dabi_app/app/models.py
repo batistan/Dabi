@@ -377,7 +377,9 @@ def update_train_status(train_num,direction):
     with sql.connect('database.db') as con:
         cur = con.cursor()
         #insert schedule time into temp_stops_at
-        q = ("insert into temp_stops_at select * from stops_at where train_num=?")
+        q = ("INSERT INTO temp_stops_at (station_id, train_num, time_in, time_out)"
+                       "SELECT * FROM stops_at "
+                       "WHERE stops_at.train_num = ?")
         cur.execute(q,(train_num,))
         #get the train's starting station from direction
         first_station = 26 if direction == 1  else 1
