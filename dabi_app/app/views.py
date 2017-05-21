@@ -43,6 +43,7 @@ def check_passengers():
 @app.route('/train_status')
 def train_status():
     create_temp_stops_at()
+    #shoud rewrite this to delay by random minutes
     rand_t = delay_random_train(45)
     affected_trains = update_all_trains(rand_t[0],rand_t[1],rand_t[2])
     trains = get_all_trains()

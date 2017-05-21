@@ -352,7 +352,7 @@ def delay_random_train(offset):
         cur.execute(get_train_stmt, (random_train,))
         return cur.fetchone()
 
-
+##move repeated actions over here, inserts all stops_at into temp_stops_at and turns time in datetime
 def insert_into_temp_stops_at():
     with sql.connect('database.db') as con:
         cur = con.cursor()
@@ -386,7 +386,6 @@ def insert_into_temp_stops_at():
 
 
 #update trains times if affected by delay in temp_stops_at
-#TODO: part of this is removing the time value of some record, needs FIX
 def update_train_status(train_num,direction):
     if(train_num<27): 
         stops = list(range(26,0,-1)) 
@@ -410,7 +409,9 @@ def update_train_status(train_num,direction):
             cur.execute(q,(train_num,st))
             sched_time = cur.fetchone()[0]
             sched_time=pydatetime(sched_time)
+            #no need to update arrival time in the past
             if(sched_time>datetime.now()): 
+                #checking if any train will be arriving later than current train
                 if(latest_train>=sched_time):
                     delay_time = (latest_train - sched_time + timedelta(minutes=5)).total_seconds()
                     delay_time = ('+' + str(delay_time) + ' seconds')
