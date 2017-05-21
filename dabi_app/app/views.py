@@ -41,9 +41,13 @@ def check_passengers():
 
 @app.route('/train_status')
 def train_status():
-    # TODO: make pretty
-    # add template file
-    return "Pulling train data..."
+    return render_template("train_status.html")
+
+@app.route('/show_status', methods = ["POST"])
+def show_status():
+    train_num = request.form["trainnum"]
+    stopsat = get_train_status(train_num)
+    return render_template("show_status.html", stopsat)
 
 @app.route('/train_seats')
 def check_seats():
