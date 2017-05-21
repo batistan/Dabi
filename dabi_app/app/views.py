@@ -38,12 +38,37 @@ def check_passengers():
     passengers = get_all_passengers()
     return render_template("check_passengers.html", passengers=passengers)
 
-
+#working
 @app.route('/train_status')
 def train_status():
-    # TODO: make pretty
-    # add template file
-    return "Pulling train data..."
+    trains = get_all_trains()
+    return render_template("train_status.html", trains=trains)
+
+@app.route('/show_status', methods = ["POST"])
+def show_status():
+    train_num = request.form["trainnum"]
+    stopsat = get_train_status(train_num)
+    return render_template("show_status.html", train_num=train_num, stopsat=stopsat)
+
+
+
+#working
+@app.route('/train_info')
+def train_info():
+    trains = get_all_trains()
+    return render_template("train_info.html", trains=trains)
+
+@app.route('/show_train_info', methods = ["POST"])
+def show_train_info():
+    #still working on it
+    train_num = request.form["trainnum"]
+    # station = request.form['s']
+    # timeIn = request.form['']
+    # timeOut = request.form['']
+    
+    return render_template("show_train_info.html", train_num=train_num )
+
+
 
 @app.route('/train_seats')
 def check_seats():

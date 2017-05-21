@@ -288,8 +288,10 @@ def get_train_status(train_num):
     with sql.connect('database.db') as con:
         cur = con.cursor()
         query_stmt = ("SELECT station_id,time_in,delayed FROM temp_stops_at where train_num = ?")
-        cur.execute(query_stmt,(train_num,))
+        # cur.execute(query_stmt,(train_num,))
+        # cur.execute(query_stmt, (train_num))
         return cur.fetchall()
+        
 
 def create_temp_stops_at():
     with sql.connect('database.db') as con:
