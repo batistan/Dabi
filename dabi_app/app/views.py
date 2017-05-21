@@ -39,46 +39,21 @@ def check_passengers():
     return render_template("check_passengers.html", passengers=passengers)
 
 #working
+#initiate the delay functions on click
 @app.route('/train_status')
 def train_status():
-<<<<<<< HEAD
+    create_temp_stops_at()
+    rand_t = delay_random_train(45)
+    affected_trains = update_all_trains(rand_t[0],rand_t[1],rand_t[2])
     trains = get_all_trains()
-    return render_template("train_status.html", trains=trains)
+    return render_template("train_status.html", trains=trains, root_train=rand_t[2], affected_trains=affected_trains)
+
 
 @app.route('/show_status', methods = ["POST"])
 def show_status():
     train_num = request.form["trainnum"]
     stopsat = get_train_status(train_num)
     return render_template("show_status.html", train_num=train_num, stopsat=stopsat)
-
-
-
-#working
-@app.route('/train_info')
-def train_info():
-    trains = get_all_trains()
-    return render_template("train_info.html", trains=trains)
-
-@app.route('/show_train_info', methods = ["POST"])
-def show_train_info():
-    #still working on it
-    train_num = request.form["trainnum"]
-    # station = request.form['s']
-    # timeIn = request.form['']
-    # timeOut = request.form['']
-    
-    return render_template("show_train_info.html", train_num=train_num )
-
-
-=======
-    return render_template("train_status.html")
-
-@app.route('/show_status', methods = ["POST"])
-def show_status():
-    train_num = request.form["trainnum"]
-    stopsat = get_train_status(train_num)
-    return render_template("show_status.html", train_num=train_num, stopsat=stopsat)
->>>>>>> refs/remotes/origin/master
 
 @app.route('/train_seats')
 def check_seats():

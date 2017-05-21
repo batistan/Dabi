@@ -1,18 +1,15 @@
 {% extends 'layout.html' %}
 {% block content %}
     <br/>
-
-<<<<<<< HEAD
     <h2 style=" text-align: center;">Status For Train {{ train_num }}:</h2>
-=======
+
     <h2>Status for train {{ train_num }}:</h2>
->>>>>>> refs/remotes/origin/master
 
     <div style=" text-align: center; display: block;">
     <table style="max-width:800px;" align="center">
         <thead>
         <tr>
-            <th>Station Name</th>
+            <th>Station</th>
             <th>Time In</th>
         </tr>
         </thead>
@@ -22,9 +19,9 @@
                 <td>{{ row[0] }}</td>
                 <!-- display with red bg color if train is delayed -->
                 {% if row[2] %}
-                <td color="#ff5050">{{ row[1] }}</td>
+                <td color="#ff5050">{{ row[1] }} Delayed</td>
                 {% else %}
-                <td>{{ row[1] }}</td>
+                <td>{{ row[1]}}  On time</td>
                 {% endif %}
             </tr>
         {% endfor %}
