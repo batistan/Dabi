@@ -47,7 +47,7 @@ def train_status():
 def show_status():
     train_num = request.form["trainnum"]
     stopsat = get_train_status(train_num)
-    return render_template("show_status.html", stopsat)
+    return render_template("show_status.html", train_num=train_num, stopsat=stopsat)
 
 @app.route('/train_seats')
 def check_seats():
