@@ -41,6 +41,7 @@ def check_passengers():
 #working
 @app.route('/train_status')
 def train_status():
+<<<<<<< HEAD
     trains = get_all_trains()
     return render_template("train_status.html", trains=trains)
 
@@ -69,6 +70,15 @@ def show_train_info():
     return render_template("show_train_info.html", train_num=train_num )
 
 
+=======
+    return render_template("train_status.html")
+
+@app.route('/show_status', methods = ["POST"])
+def show_status():
+    train_num = request.form["trainnum"]
+    stopsat = get_train_status(train_num)
+    return render_template("show_status.html", train_num=train_num, stopsat=stopsat)
+>>>>>>> refs/remotes/origin/master
 
 @app.route('/train_seats')
 def check_seats():
